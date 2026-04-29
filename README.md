@@ -3,6 +3,14 @@
 > An interactive, gamified, and fully visual Git learning platform built in a single HTML file.
 
 GitVista helps beginners master Git from absolute basics to advanced concepts through interactive simulations, visual commit graphs, quizzes, and hands-on learning.
+<img width="957" height="488" alt="image" src="https://github.com/user-attachments/assets/f0f9a435-815a-4c4a-8cc5-d7eff7eb8a43" />
+
+<img width="959" height="494" alt="image" src="https://github.com/user-attachments/assets/db56506a-c5e1-4f07-b9fc-465b2d5c107d" />
+<img width="949" height="484" alt="image" src="https://github.com/user-attachments/assets/293c0e22-5265-49f0-af7a-25d042b818a3" />
+<img width="941" height="478" alt="image" src="https://github.com/user-attachments/assets/d62ed873-8148-48c2-bc8b-ad8e88adf93f" />
+
+
+
 
 ---
 
