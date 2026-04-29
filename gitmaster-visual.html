@@ -1,0 +1,3859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitMaster Visual – Complete Git Learning System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #0a0b0f;
+  --bg2: #0f1117;
+  --bg3: #161820;
+  --bg4: #1c1f2a;
+  --border: #252836;
+  --border2: #2f3347;
+  --text: #e8eaf0;
+  --text2: #9ba3c0;
+  --text3: #5c6280;
+  --accent: #4f9eff;
+  --accent2: #7c5cfc;
+  --green: #3dd68c;
+  --orange: #ff8c42;
+  --red: #ff5571;
+  --yellow: #ffd166;
+  --cyan: #06d6c0;
+  --pink: #f72585;
+  --node-commit: #4f9eff;
+  --node-branch: #3dd68c;
+  --node-head: #ffd166;
+  --node-remote: #f72585;
+  --sidebar-w: 260px;
+  --header-h: 56px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* HEADER */
+#header {
+  height: var(--header-h);
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+#header .logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+#header .logo span { color: var(--green); -webkit-text-fill-color: var(--green); }
+
+#xp-bar {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#level-badge {
+  background: linear-gradient(135deg, var(--accent2), var(--pink));
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+#xp-display {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--yellow);
+}
+
+#xp-progress-wrap {
+  width: 100px;
+  height: 6px;
+  background: var(--bg4);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+#xp-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+#badges-btn {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+#badges-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* LAYOUT */
+#app {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+#sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.sidebar-section-label {
+  padding: 8px 16px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all 0.15s;
+  font-size: 13px;
+  color: var(--text2);
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.sidebar-item:hover { background: var(--bg3); color: var(--text); }
+.sidebar-item.active { background: rgba(79,158,255,0.08); color: var(--accent); border-left-color: var(--accent); }
+
+.sidebar-item .icon { font-size: 15px; width: 18px; text-align: center; }
+.sidebar-item .check { margin-left: auto; color: var(--green); font-size: 11px; }
+.sidebar-item .xp-badge { margin-left: auto; font-size: 10px; color: var(--yellow); font-family: 'JetBrains Mono', monospace; }
+
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+/* MAIN */
+#main {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* PAGES */
+.page { display: none; padding: 28px; max-width: 960px; margin: 0 auto; width: 100%; }
+.page.active { display: block; }
+
+/* TOPIC CARD */
+.topic-header {
+  margin-bottom: 24px;
+}
+
+.topic-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.tag-basics { background: rgba(61,214,140,0.15); color: var(--green); }
+.tag-branch { background: rgba(79,158,255,0.15); color: var(--accent); }
+.tag-remote { background: rgba(255,140,66,0.15); color: var(--orange); }
+.tag-advanced { background: rgba(255,85,113,0.15); color: var(--red); }
+.tag-internals { background: rgba(124,92,252,0.15); color: var(--accent2); }
+.tag-sim { background: rgba(247,37,133,0.15); color: var(--pink); }
+.tag-quiz { background: rgba(255,209,102,0.15); color: var(--yellow); }
+.tag-exam { background: rgba(6,214,192,0.15); color: var(--cyan); }
+
+.topic-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.topic-subtitle {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-green { background: var(--green); }
+.dot-blue { background: var(--accent); }
+.dot-orange { background: var(--orange); }
+.dot-red { background: var(--red); }
+.dot-purple { background: var(--accent2); }
+.dot-yellow { background: var(--yellow); }
+.dot-cyan { background: var(--cyan); }
+
+p { color: var(--text2); font-size: 14px; line-height: 1.7; margin-bottom: 8px; }
+p:last-child { margin-bottom: 0; }
+
+.analogy-box {
+  background: rgba(79,158,255,0.06);
+  border: 1px solid rgba(79,158,255,0.2);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.analogy-box::before {
+  content: '💡 Analogy: ';
+  color: var(--yellow);
+  font-weight: 600;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg4);
+  color: var(--cyan);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.code-block {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-x: auto;
+  margin: 10px 0;
+  position: relative;
+}
+
+.code-block .comment { color: var(--text3); }
+.code-block .cmd { color: var(--green); }
+.code-block .flag { color: var(--orange); }
+.code-block .str { color: var(--yellow); }
+.code-block .hash { color: var(--accent2); }
+
+.steps-list {
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps-list li {
+  counter-increment: step;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.steps-list li::before {
+  content: counter(step);
+  background: var(--accent);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.mistake-box {
+  background: rgba(255,85,113,0.06);
+  border: 1px solid rgba(255,85,113,0.2);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 8px;
+}
+
+.mistake-box .mistake-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+
+.mistake-box ul { padding-left: 16px; }
+.mistake-box li { color: var(--text2); font-size: 13px; line-height: 1.6; margin-bottom: 4px; }
+
+.ref-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 8px;
+}
+
+.ref-box .ref-title { font-size: 12px; font-weight: 600; color: var(--text3); margin-bottom: 8px; }
+.ref-box a {
+  display: block;
+  color: var(--accent);
+  font-size: 12px;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 4px;
+  transition: opacity 0.2s;
+}
+.ref-box a:hover { opacity: 0.8; text-decoration: underline; }
+
+/* VISUALIZATION CANVAS */
+.viz-container {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.viz-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.viz-dot { width: 8px; height: 8px; border-radius: 50%; }
+.viz-dot-r { background: var(--red); }
+.viz-dot-y { background: var(--yellow); }
+.viz-dot-g { background: var(--green); }
+
+.viz-canvas {
+  padding: 20px;
+  min-height: 160px;
+  position: relative;
+  overflow-x: auto;
+}
+
+/* GIT GRAPH NODES */
+.git-graph {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  position: relative;
+  min-height: 80px;
+}
+
+.commit-node {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--node-commit);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  cursor: default;
+  transition: transform 0.2s;
+  box-shadow: 0 0 0 3px rgba(79,158,255,0.2);
+}
+
+.commit-node:hover { transform: scale(1.1); }
+.commit-node.head-node { background: var(--node-head); color: var(--bg); box-shadow: 0 0 0 3px rgba(255,209,102,0.3); }
+.commit-node.branch-node { background: var(--node-branch); box-shadow: 0 0 0 3px rgba(61,214,140,0.2); }
+.commit-node.remote-node { background: var(--node-remote); box-shadow: 0 0 0 3px rgba(247,37,133,0.2); }
+.commit-node.new-node {
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.commit-arrow {
+  width: 36px;
+  height: 2px;
+  background: var(--border2);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.commit-arrow::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  border: 5px solid transparent;
+  border-left-color: var(--border2);
+}
+
+.branch-label {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green);
+  color: var(--bg);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.branch-label.main-label { background: var(--accent); color: white; }
+.branch-label.head-label { background: var(--yellow); color: var(--bg); }
+.branch-label.remote-label { background: var(--pink); color: white; }
+
+.node-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-top: 30px;
+}
+
+.node-meta {
+  font-size: 9px;
+  color: var(--text3);
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* SVG graph */
+.git-svg {
+  width: 100%;
+  min-height: 140px;
+}
+
+/* BEFORE/AFTER */
+.ba-grid {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+  align-items: center;
+}
+
+.ba-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.ba-before { background: rgba(255,85,113,0.12); color: var(--red); }
+.ba-after { background: rgba(61,214,140,0.12); color: var(--green); }
+
+.ba-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text3);
+  font-size: 20px;
+}
+
+.ba-arrow .cmd-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--accent);
+  white-space: nowrap;
+  text-align: center;
+  background: var(--bg4);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ANIMATE BUTTON */
+.anim-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.anim-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(79,158,255,0.3); }
+.anim-btn:active { transform: translateY(0); }
+
+/* QUIZ */
+.quiz-question {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.quiz-q-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quiz-option {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text2);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+}
+
+.quiz-option:hover:not(.answered) { border-color: var(--accent); color: var(--text); }
+.quiz-option.correct { background: rgba(61,214,140,0.1); border-color: var(--green); color: var(--green); }
+.quiz-option.wrong { background: rgba(255,85,113,0.1); border-color: var(--red); color: var(--red); }
+
+.quiz-opt-key {
+  width: 22px; height: 22px;
+  border-radius: 5px;
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.quiz-feedback {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  display: none;
+  line-height: 1.5;
+}
+
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: rgba(61,214,140,0.08); color: var(--green); border: 1px solid rgba(61,214,140,0.2); }
+.quiz-feedback.wrong { background: rgba(255,85,113,0.08); color: var(--red); border: 1px solid rgba(255,85,113,0.2); }
+
+/* TERMINAL */
+#terminal-wrap {
+  background: #0d1117;
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#terminal-header {
+  background: #161b22;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.term-dots { display: flex; gap: 6px; }
+.term-dot { width: 12px; height: 12px; border-radius: 50%; }
+.td-r { background: #ff5f57; }
+.td-y { background: #febc2e; }
+.td-g { background: #28c840; }
+
+#terminal-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text3);
+  margin: 0 auto;
+}
+
+#terminal-output {
+  padding: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  min-height: 240px;
+  max-height: 320px;
+  overflow-y: auto;
+  color: #c9d1d9;
+}
+
+.term-line { display: flex; gap: 8px; flex-wrap: wrap; }
+.term-prompt { color: var(--green); flex-shrink: 0; }
+.term-cmd { color: white; }
+.term-out { color: #8b949e; padding-left: 0; }
+.term-success { color: var(--green); }
+.term-error { color: var(--red); }
+.term-info { color: var(--cyan); }
+.term-warn { color: var(--yellow); }
+
+#terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+#terminal-prompt-label { color: var(--green); flex-shrink: 0; }
+
+#terminal-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  flex: 1;
+  caret-color: var(--green);
+}
+
+/* SIMULATOR VIZ */
+#sim-graph-wrap {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  min-height: 200px;
+  position: relative;
+}
+
+#sim-graph-canvas {
+  width: 100%;
+  height: 180px;
+}
+
+#sim-state-info {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.state-item { }
+.state-label { color: var(--text3); font-size: 10px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.state-value { color: var(--cyan); }
+
+/* INTERNALS */
+.object-box {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 8px 0;
+}
+
+.obj-type { color: var(--accent2); font-weight: 700; font-size: 12px; margin-bottom: 6px; }
+.obj-field { color: var(--text3); }
+.obj-val { color: var(--yellow); }
+.obj-hash { color: var(--cyan); }
+
+.dag-svg { width: 100%; height: 200px; }
+
+/* FINAL EXAM */
+.exam-score-display {
+  text-align: center;
+  padding: 40px;
+}
+
+.exam-score-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 80px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.exam-rank {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.exam-timer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  color: var(--red);
+  margin-bottom: 16px;
+}
+
+/* BADGES MODAL */
+#badges-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+#badges-modal.open { display: flex; }
+
+.modal-box {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 28px;
+  width: 520px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.badge-item {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.badge-item.earned { border-color: var(--yellow); background: rgba(255,209,102,0.05); }
+.badge-icon { font-size: 28px; margin-bottom: 8px; filter: grayscale(1); }
+.badge-item.earned .badge-icon { filter: none; }
+.badge-name { font-size: 11px; font-weight: 600; color: var(--text3); line-height: 1.4; }
+.badge-item.earned .badge-name { color: var(--yellow); }
+
+.modal-close {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.modal-close:hover { border-color: var(--red); color: var(--red); }
+
+/* HOME PAGE */
+.home-hero {
+  text-align: center;
+  padding: 40px 0 32px;
+}
+
+.home-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 14px;
+  line-height: 1.1;
+}
+
+.home-sub {
+  color: var(--text2);
+  font-size: 16px;
+  max-width: 560px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.home-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.stat-item { text-align: center; }
+.stat-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--text3); }
+
+.home-modules {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.module-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.module-card:hover { border-color: var(--accent); transform: translateY(-2px); background: var(--bg3); }
+.module-card .mc-icon { font-size: 28px; margin-bottom: 10px; }
+.module-card .mc-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.module-card .mc-sub { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+/* SCORE TOAST */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg2);
+  border: 1px solid var(--green);
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 13px;
+  color: var(--green);
+  font-family: 'JetBrains Mono', monospace;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#toast.show { transform: translateY(0); opacity: 1; }
+
+/* SCROLLABLE CONTENT HELPER */
+.scroll-content { overflow-x: auto; }
+
+/* GRID HELPERS */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* PROGRESS BAR FOR QUIZ */
+.quiz-progress { height: 4px; background: var(--bg4); border-radius: 2px; margin-bottom: 20px; }
+.quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 2px; transition: width 0.4s ease; }
+
+/* INTERNALS VISUAL */
+.three-areas {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.area-box {
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.area-box.working { background: rgba(255,209,102,0.08); border: 1px solid rgba(255,209,102,0.25); }
+.area-box.staging { background: rgba(79,158,255,0.08); border: 1px solid rgba(79,158,255,0.25); }
+.area-box.repo { background: rgba(61,214,140,0.08); border: 1px solid rgba(61,214,140,0.25); }
+
+.area-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.area-box.working .area-title { color: var(--yellow); }
+.area-box.staging .area-title { color: var(--accent); }
+.area-box.repo .area-title { color: var(--green); }
+
+.area-files {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text2);
+  line-height: 1.8;
+}
+
+/* COMMAND REFERENCE PILL */
+.cmd-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--cyan);
+  margin: 3px;
+}
+
+/* REBASE VISUAL */
+.rebase-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.branch-track {
+  flex: 1;
+  min-width: 180px;
+}
+
+.branch-track-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* HOME START BUTTON */
+.start-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  color: white;
+  padding: 14px 36px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.2s;
+  margin: 4px;
+}
+
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(79,158,255,0.35); }
+
+.outline-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 14px 36px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.2s;
+  margin: 4px;
+}
+
+.outline-btn:hover { border-color: var(--text2); color: var(--text); }
+
+/* COMPLETE BTN */
+.complete-btn {
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  border: none;
+  color: var(--bg);
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s;
+  margin-top: 16px;
+}
+
+.complete-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(61,214,140,0.3); }
+
+/* NEXT BTN */
+.next-btn {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+.next-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* SEPARATOR */
+hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* CHIP */
+.chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.chip-green { background: rgba(61,214,140,0.15); color: var(--green); }
+.chip-blue { background: rgba(79,158,255,0.15); color: var(--accent); }
+.chip-red { background: rgba(255,85,113,0.15); color: var(--red); }
+.chip-yellow { background: rgba(255,209,102,0.15); color: var(--yellow); }
+.chip-purple { background: rgba(124,92,252,0.15); color: var(--accent2); }
+.chip-orange { background: rgba(255,140,66,0.15); color: var(--orange); }
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--bg4); color: var(--text2); text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border); }
+td { padding: 8px 12px; border: 1px solid var(--border); color: var(--text2); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+/* TOPIC NAV */
+.topic-nav { display: flex; gap: 8px; margin-top: 20px; }
+
+/* ALERTS */
+.alert {
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 10px 0;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.alert-info { background: rgba(79,158,255,0.08); border: 1px solid rgba(79,158,255,0.2); color: var(--text2); }
+.alert-warn { background: rgba(255,209,102,0.08); border: 1px solid rgba(255,209,102,0.2); color: var(--text2); }
+.alert-danger { background: rgba(255,85,113,0.08); border: 1px solid rgba(255,85,113,0.2); color: var(--text2); }
+.alert-success { background: rgba(61,214,140,0.08); border: 1px solid rgba(61,214,140,0.2); color: var(--text2); }
+
+.alert-icon { flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="logo">Git<span>Master</span> Visual</div>
+  <div style="font-size:12px; color:var(--text3); margin-left:8px; font-family:'JetBrains Mono',monospace;">v1.0 · Zero → FAANG</div>
+  <div id="xp-bar">
+    <div id="level-badge">Lv.1 Beginner</div>
+    <div id="xp-display">0 / 200 XP</div>
+    <div id="xp-progress-wrap"><div id="xp-progress-fill"></div></div>
+    <button id="badges-btn" onclick="openBadges()">🏅 Badges</button>
+  </div>
+</div>
+
+<div id="app">
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div id="sidebar-scroll">
+    <div class="sidebar-section-label">🏠 Start</div>
+    <div class="sidebar-item active" onclick="navigate('home')" data-page="home"><span class="icon">🏠</span> Home<span class="xp-badge"></span></div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">🟢 Git Basics</div>
+    <div class="sidebar-item" onclick="navigate('what-is-git')" data-page="what-is-git"><span class="icon">❓</span> What is Git?<span class="xp-badge">+10</span></div>
+    <div class="sidebar-item" onclick="navigate('repository')" data-page="repository"><span class="icon">📦</span> Repository<span class="xp-badge">+10</span></div>
+    <div class="sidebar-item" onclick="navigate('git-init')" data-page="git-init"><span class="icon">🚀</span> git init<span class="xp-badge">+10</span></div>
+    <div class="sidebar-item" onclick="navigate('git-add')" data-page="git-add"><span class="icon">➕</span> git add<span class="xp-badge">+10</span></div>
+    <div class="sidebar-item" onclick="navigate('git-commit')" data-page="git-commit"><span class="icon">💾</span> git commit<span class="xp-badge">+15</span></div>
+    <div class="sidebar-item" onclick="navigate('git-status')" data-page="git-status"><span class="icon">🔍</span> git status<span class="xp-badge">+10</span></div>
+    <div class="sidebar-item" onclick="navigate('git-log')" data-page="git-log"><span class="icon">📋</span> git log<span class="xp-badge">+10</span></div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">🟡 Branching</div>
+    <div class="sidebar-item" onclick="navigate('git-branch')" data-page="git-branch"><span class="icon">🌿</span> git branch<span class="xp-badge">+15</span></div>
+    <div class="sidebar-item" onclick="navigate('git-checkout')" data-page="git-checkout"><span class="icon">🔀</span> git checkout / switch<span class="xp-badge">+15</span></div>
+    <div class="sidebar-item" onclick="navigate('git-merge')" data-page="git-merge"><span class="icon">🔗</span> git merge<span class="xp-badge">+20</span></div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">🟠 Remote Git</div>
+    <div class="sidebar-item" onclick="navigate('git-clone')" data-page="git-clone"><span class="icon">📥</span> git clone<span class="xp-badge">+15</span></div>
+    <div class="sidebar-item" onclick="navigate('git-push')" data-page="git-push"><span class="icon">📤</span> git push<span class="xp-badge">+15</span></div>
+    <div class="sidebar-item" onclick="navigate('git-pull')" data-page="git-pull"><span class="icon">⬇️</span> git pull<span class="xp-badge">+15</span></div>
+    <div class="sidebar-item" onclick="navigate('git-fetch')" data-page="git-fetch"><span class="icon">🔄</span> git fetch<span class="xp-badge">+15</span></div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">🔴 Advanced Git</div>
+    <div class="sidebar-item" onclick="navigate('git-rebase')" data-page="git-rebase"><span class="icon">⚡</span> git rebase<span class="xp-badge">+25</span></div>
+    <div class="sidebar-item" onclick="navigate('git-cherry-pick')" data-page="git-cherry-pick"><span class="icon">🍒</span> cherry-pick<span class="xp-badge">+25</span></div>
+    <div class="sidebar-item" onclick="navigate('git-stash')" data-page="git-stash"><span class="icon">🗃️</span> git stash<span class="xp-badge">+20</span></div>
+    <div class="sidebar-item" onclick="navigate('git-reset')" data-page="git-reset"><span class="icon">↩️</span> git reset<span class="xp-badge">+25</span></div>
+    <div class="sidebar-item" onclick="navigate('git-reflog')" data-page="git-reflog"><span class="icon">🕰️</span> git reflog<span class="xp-badge">+20</span></div>
+    <div class="sidebar-item" onclick="navigate('git-head')" data-page="git-head"><span class="icon">👁️</span> HEAD<span class="xp-badge">+20</span></div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">⚫ Git Internals</div>
+    <div class="sidebar-item" onclick="navigate('internals')" data-page="internals"><span class="icon">🔬</span> Objects & DAG<span class="xp-badge">+30</span></div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">🎮 Practice</div>
+    <div class="sidebar-item" onclick="navigate('simulator')" data-page="simulator"><span class="icon">💻</span> Visual Simulator<span class="xp-badge">+20</span></div>
+    <div class="sidebar-item" onclick="navigate('quiz')" data-page="quiz"><span class="icon">🧪</span> Quiz Arena<span class="xp-badge">+30</span></div>
+    <div class="sidebar-item" onclick="navigate('exam')" data-page="exam"><span class="icon">🏁</span> Final Exam<span class="xp-badge">+50</span></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <div class="home-hero">
+    <div class="home-title">Master Git Visually</div>
+    <div class="home-sub">From absolute zero to FAANG interview-ready. See every command visualized, understand Git's internal object model, and practice in an interactive terminal.</div>
+    <div class="home-stats">
+      <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">Topics</div></div>
+      <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">Visualizations</div></div>
+      <div class="stat-item"><div class="stat-num">40+</div><div class="stat-label">Quiz Questions</div></div>
+      <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Badges to Earn</div></div>
+    </div>
+    <div>
+      <button class="start-btn" onclick="navigate('what-is-git')">▶ Start Learning</button>
+      <button class="outline-btn" onclick="navigate('simulator')">💻 Open Simulator</button>
+    </div>
+  </div>
+
+  <div class="home-modules">
+    <div class="module-card" onclick="navigate('what-is-git')">
+      <div class="mc-icon">🟢</div>
+      <div class="mc-title">Git Basics</div>
+      <div class="mc-sub">init, add, commit, status, log</div>
+    </div>
+    <div class="module-card" onclick="navigate('git-branch')">
+      <div class="mc-icon">🌿</div>
+      <div class="mc-title">Branching</div>
+      <div class="mc-sub">branch, checkout, merge, fast-forward</div>
+    </div>
+    <div class="module-card" onclick="navigate('git-clone')">
+      <div class="mc-icon">🌐</div>
+      <div class="mc-title">Remote Git</div>
+      <div class="mc-sub">clone, push, pull, fetch, origin</div>
+    </div>
+    <div class="module-card" onclick="navigate('git-rebase')">
+      <div class="mc-icon">⚡</div>
+      <div class="mc-title">Advanced Git</div>
+      <div class="mc-sub">rebase, cherry-pick, stash, reset</div>
+    </div>
+    <div class="module-card" onclick="navigate('internals')">
+      <div class="mc-icon">🔬</div>
+      <div class="mc-title">Git Internals</div>
+      <div class="mc-sub">blobs, trees, commits, DAG model</div>
+    </div>
+    <div class="module-card" onclick="navigate('simulator')">
+      <div class="mc-icon">💻</div>
+      <div class="mc-title">Simulator</div>
+      <div class="mc-sub">Interactive terminal + live viz</div>
+    </div>
+    <div class="module-card" onclick="navigate('quiz')">
+      <div class="mc-icon">🧪</div>
+      <div class="mc-title">Quiz Arena</div>
+      <div class="mc-sub">Test your knowledge per topic</div>
+    </div>
+    <div class="module-card" onclick="navigate('exam')">
+      <div class="mc-icon">🏁</div>
+      <div class="mc-title">Final Exam</div>
+      <div class="mc-sub">20Qs · Timed · Get ranked</div>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT IS GIT -->
+<div id="page-what-is-git" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-basics">Git Basics</div>
+    <div class="topic-title">What is Git?</div>
+    <div class="topic-subtitle">A distributed version control system that tracks changes in source code during software development.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Core Concept</div>
+    <p>Git is a <strong>distributed version control system</strong> (DVCS) created by Linus Torvalds in 2005. Unlike centralized systems, every developer has a full copy of the entire repository history on their machine.</p>
+    <p>Git tracks changes as a series of <strong>snapshots</strong> — not diffs. Every time you commit, Git takes a picture of what all your files look like at that moment.</p>
+    <div class="analogy-box">Think of Git like a save system in a video game. Every time you save (commit), it records the complete state of your game world. You can always load any previous save — even if you've made hundreds of mistakes since then.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Why Git? The 3 Superpowers</div>
+    <div class="three-areas">
+      <div class="area-box working">
+        <div class="area-title">⏱️ Time Travel</div>
+        <div class="area-files">Go back to any<br>point in history.<br>Nothing is lost.</div>
+      </div>
+      <div class="area-box staging">
+        <div class="area-title">🌿 Parallel Work</div>
+        <div class="area-files">Multiple features<br>in branches.<br>Merge when ready.</div>
+      </div>
+      <div class="area-box repo">
+        <div class="area-title">🤝 Collaboration</div>
+        <div class="area-files">Distributed: everyone<br>has full history.<br>No single point of failure.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Git vs Other VCS</div>
+    <table>
+      <tr><th>Feature</th><th>Git</th><th>SVN (Centralized)</th></tr>
+      <tr><td>Storage model</td><td><span class="chip chip-green">Snapshots</span></td><td><span class="chip chip-yellow">Diffs/Deltas</span></td></tr>
+      <tr><td>Work offline</td><td><span class="chip chip-green">✓ Yes</span></td><td><span class="chip chip-red">✗ No</span></td></tr>
+      <tr><td>History location</td><td><span class="chip chip-green">Every machine</span></td><td><span class="chip chip-yellow">Central server</span></td></tr>
+      <tr><td>Branching</td><td><span class="chip chip-green">Instant, free</span></td><td><span class="chip chip-red">Expensive, slow</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-purple"></div>Git's Three Areas</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> <span style="margin-left:8px;">git-areas.diagram</span></div>
+      <div class="viz-canvas">
+        <div class="three-areas" style="height:120px;">
+          <div class="area-box working" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+            <div class="area-title" style="font-size:13px;margin-bottom:10px;">📁 Working Directory</div>
+            <div class="area-files">Your actual files<br>on disk.<br><br>Modified but<br>not yet staged.</div>
+          </div>
+          <div class="area-box staging" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+            <div class="area-title" style="font-size:13px;margin-bottom:10px;">📋 Staging Area<br><span style="font-size:9px;">(Index)</span></div>
+            <div class="area-files">Files ready<br>to be committed.<br><br><code>git add</code><br>moves files here.</div>
+          </div>
+          <div class="area-box repo" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+            <div class="area-title" style="font-size:13px;margin-bottom:10px;">🗄️ Repository<br><span style="font-size:9px;">(.git directory)</span></div>
+            <div class="area-files">Committed history.<br>Permanent record<br>of all snapshots.</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-around;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);">
+          <div style="text-align:center;">→ <span style="color:var(--accent);">git add</span> →</div>
+          <div style="text-align:center;">→ <span style="color:var(--green);">git commit</span> →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control" target="_blank">https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control</a>
+    <a href="https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F" target="_blank">https://git-scm.com/book/en/v2/Getting-Started-What-is-Git</a>
+    <a href="https://www.atlassian.com/git/tutorials/what-is-git" target="_blank">https://www.atlassian.com/git/tutorials/what-is-git</a>
+  </div>
+
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('what-is-git','repository',10)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- REPOSITORY -->
+<div id="page-repository" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-basics">Git Basics</div>
+    <div class="topic-title">Repository</div>
+    <div class="topic-subtitle">The container that holds all your project's files, history, and metadata inside a hidden <code>.git</code> folder.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>What is a Repository?</div>
+    <p>A Git repository (repo) is a directory that Git has been initialized in. It contains a hidden <code>.git/</code> folder where Git stores everything — all your commits, branches, configurations, and object database.</p>
+    <div class="analogy-box">Think of a repository like a book with a very thorough appendix. The book (your code files) is what you read. The appendix (.git folder) contains the complete history, index, and metadata that makes version control possible.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>The .git Folder Structure</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> .git directory</div>
+      <div class="viz-canvas">
+        <div class="code-block" style="margin:0;">
+<span class="comment"># .git/ structure (created by git init)</span>
+.git/
+├── <span class="str">HEAD</span>          <span class="comment"># Points to current branch</span>
+├── <span class="str">config</span>        <span class="comment"># Repository configuration</span>
+├── <span class="str">description</span>   <span class="comment"># Used by GitWeb only</span>
+├── <span class="str">hooks/</span>        <span class="comment"># Lifecycle hook scripts</span>
+├── <span class="str">info/</span>         <span class="comment"># Global excludes</span>
+├── <span class="str">objects/</span>      <span class="comment"># All Git objects (blobs, trees, commits)</span>
+│   ├── <span class="str">info/</span>
+│   └── <span class="str">pack/</span>
+└── <span class="str">refs/</span>         <span class="comment"># Branch and tag pointers</span>
+    ├── <span class="str">heads/</span>     <span class="comment"># Local branch refs</span>
+    ├── <span class="str">remotes/</span>   <span class="comment"># Remote tracking refs</span>
+    └── <span class="str">tags/</span>      <span class="comment"># Tag refs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Types of Repositories</div>
+    <div class="two-col">
+      <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:14px;">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:var(--accent);">Local Repository</div>
+        <p>Lives on your machine. Contains your working files + full history. You can work completely offline.</p>
+      </div>
+      <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:14px;">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:var(--orange);">Remote Repository</div>
+        <p>Hosted on a server (GitHub, GitLab, Bitbucket). Shared with team. Used for collaboration and backup.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/book/en/v2/Git-Internals-Git-Objects" target="_blank">https://git-scm.com/book/en/v2/Git-Internals-Git-Objects</a>
+    <a href="https://git-scm.com/docs" target="_blank">https://git-scm.com/docs</a>
+  </div>
+
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('repository','git-init',10)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT INIT -->
+<div id="page-git-init" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-basics">Git Basics</div>
+    <div class="topic-title">git init</div>
+    <div class="topic-subtitle">Initialize a new Git repository in the current directory, creating the hidden <code>.git</code> folder.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Command</div>
+    <div class="code-block">
+<span class="comment"># Initialize a new repo in current directory</span>
+<span class="cmd">git init</span>
+
+<span class="comment"># Initialize with a specific name (creates new folder)</span>
+<span class="cmd">git init</span> <span class="str">my-project</span>
+
+<span class="comment"># Initialize as a bare repo (for servers)</span>
+<span class="cmd">git init</span> <span class="flag">--bare</span> repo.git
+    </div>
+    <div class="analogy-box">Running git init is like placing a surveillance camera in your room — from this moment on, Git watches everything. The first time you do this, nothing is recorded yet, but the system is active and ready.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>What Happens Internally</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> git-init-viz.animate</div>
+      <div class="viz-canvas" id="init-viz">
+        <div id="init-before" style="margin-bottom:16px;">
+          <span class="ba-label ba-before">BEFORE</span>
+          <div style="background:var(--bg4);border:1px dashed var(--border2);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text3);">
+            📁 /my-project/<br>
+            &nbsp;&nbsp;📄 index.html<br>
+            &nbsp;&nbsp;📄 style.css<br>
+            <span style="color:var(--red);">&nbsp;&nbsp;[No .git folder — not a repo]</span>
+          </div>
+        </div>
+        <div>
+          <span class="ba-label ba-after">AFTER: git init</span>
+          <div style="background:var(--bg4);border:1px solid rgba(61,214,140,0.3);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;">
+            📁 /my-project/<br>
+            &nbsp;&nbsp;📄 index.html<br>
+            &nbsp;&nbsp;📄 style.css<br>
+            &nbsp;&nbsp;<span style="color:var(--green);">📁 .git/</span> <span style="color:var(--text3);">← created!</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--cyan);">HEAD</span> → <span style="color:var(--yellow);">refs/heads/main</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--cyan);">objects/</span> (empty)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--cyan);">refs/</span> (empty)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Step-by-Step Internal Working</div>
+    <ul class="steps-list">
+      <li>Git creates the <code>.git/</code> directory in your project folder</li>
+      <li>Creates <code>.git/HEAD</code> pointing to <code>refs/heads/main</code> (default branch)</li>
+      <li>Creates empty <code>.git/objects/</code> — no commits yet, so the object database is empty</li>
+      <li>Creates <code>.git/refs/heads/</code> and <code>.git/refs/tags/</code> — also empty</li>
+      <li>Creates <code>.git/config</code> with default repository settings</li>
+      <li>Your working files are still <strong>untracked</strong> — Git sees them but hasn't recorded them</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Common Mistakes</div>
+    <div class="mistake-box">
+      <div class="mistake-title">⚠️ Watch Out</div>
+      <ul>
+        <li>Running <code>git init</code> inside another git repo creates a <strong>nested repo</strong> — usually a mistake</li>
+        <li>Deleting the <code>.git/</code> folder destroys ALL history permanently</li>
+        <li>Don't commit the <code>.git/</code> folder itself to any repo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-init" target="_blank">https://git-scm.com/docs/git-init</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository" target="_blank">https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository</a>
+  </div>
+
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-init','git-add',10)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT ADD -->
+<div id="page-git-add" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-basics">Git Basics</div>
+    <div class="topic-title">git add</div>
+    <div class="topic-subtitle">Move changes from the working directory to the staging area (index), preparing them for a commit.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Stage a specific file</span>
+<span class="cmd">git add</span> <span class="str">index.html</span>
+
+<span class="comment"># Stage all changes in current directory</span>
+<span class="cmd">git add</span> <span class="flag">.</span>
+
+<span class="comment"># Stage all tracked and untracked files everywhere</span>
+<span class="cmd">git add</span> <span class="flag">-A</span>
+
+<span class="comment"># Interactively choose which changes to stage (patch mode)</span>
+<span class="cmd">git add</span> <span class="flag">-p</span> <span class="str">file.js</span>
+    </div>
+    <div class="analogy-box">The staging area is like a shopping cart 🛒. You browse your store (working directory) and put items in your cart (staging). When you checkout (commit), only the items in your cart are purchased — not everything in the store.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Before → After Visualization</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> git-add-staging.viz</div>
+      <div class="viz-canvas">
+        <div class="ba-grid">
+          <div>
+            <div class="ba-label ba-before">BEFORE</div>
+            <div style="background:rgba(255,209,102,0.06);border:1px solid rgba(255,209,102,0.2);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:11px;">
+              <div style="color:var(--yellow);font-weight:700;margin-bottom:6px;">📁 Working Dir</div>
+              <div style="color:var(--red);">M index.html</div>
+              <div style="color:var(--red);">?? style.css</div>
+              <div style="color:var(--text3);">── Staging ──</div>
+              <div style="color:var(--text3);">(empty)</div>
+            </div>
+          </div>
+          <div class="ba-arrow">
+            <div>→</div>
+            <div class="cmd-text">git add index.html</div>
+          </div>
+          <div>
+            <div class="ba-label ba-after">AFTER</div>
+            <div style="background:rgba(79,158,255,0.06);border:1px solid rgba(79,158,255,0.2);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:11px;">
+              <div style="color:var(--yellow);font-weight:700;margin-bottom:6px;">📁 Working Dir</div>
+              <div style="color:var(--text3);">  index.html</div>
+              <div style="color:var(--red);">?? style.css</div>
+              <div style="color:var(--accent);font-weight:700;margin-top:4px;">📋 Staging</div>
+              <div style="color:var(--green);">A  index.html ✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>What Happens Internally</div>
+    <ul class="steps-list">
+      <li>Git reads the file content and computes a SHA-1 hash of it</li>
+      <li>Creates a <strong>blob object</strong> in <code>.git/objects/</code> storing the file content</li>
+      <li>Updates the <strong>index</strong> file (<code>.git/index</code>) to map the filename → blob hash</li>
+      <li>The file is now in "staged" state — ready to be included in the next commit</li>
+    </ul>
+    <div class="alert alert-info"><span class="alert-icon">ℹ️</span> <code>git add</code> doesn't create a commit — it just prepares the index. You can add and unstage (with <code>git restore --staged</code>) as many times as you want.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Common Mistakes</div>
+    <div class="mistake-box">
+      <div class="mistake-title">⚠️ Watch Out</div>
+      <ul>
+        <li><code>git add .</code> stages everything — use <code>.gitignore</code> to exclude node_modules, .env etc.</li>
+        <li>Don't blindly add all files — use <code>git status</code> first to review changes</li>
+        <li><code>git add -A</code> also stages deletions, while <code>git add .</code> only adds/modifies</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-add" target="_blank">https://git-scm.com/docs/git-add</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository" target="_blank">https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository</a>
+  </div>
+
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-add','git-commit',10)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT COMMIT -->
+<div id="page-git-commit" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-basics">Git Basics</div>
+    <div class="topic-title">git commit</div>
+    <div class="topic-subtitle">Create a permanent snapshot of staged changes in the repository's history.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Standard commit with message</span>
+<span class="cmd">git commit</span> <span class="flag">-m</span> <span class="str">"Add login feature"</span>
+
+<span class="comment"># Stage all tracked files and commit in one step</span>
+<span class="cmd">git commit</span> <span class="flag">-am</span> <span class="str">"Fix bug in auth module"</span>
+
+<span class="comment"># Amend the most recent commit (change message or add files)</span>
+<span class="cmd">git commit</span> <span class="flag">--amend</span> <span class="flag">-m</span> <span class="str">"Better message"</span>
+
+<span class="comment"># Empty commit (useful for triggering CI)</span>
+<span class="cmd">git commit</span> <span class="flag">--allow-empty</span> <span class="flag">-m</span> <span class="str">"Trigger CI"</span>
+    </div>
+    <div class="analogy-box">A commit is like taking a photograph 📸 of your project. Every photo has a timestamp, who took it, and what it shows. You can scroll through your photo album (git log) and see exactly how the project looked at any point in time.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Commit Object Structure (Internals)</div>
+    <div class="object-box">
+      <div class="obj-type">commit</div>
+      <span class="obj-field">tree </span><span class="obj-hash">4b825dc642cb6eb9a060e54bf8d69288fbee4904</span><br>
+      <span class="obj-field">parent </span><span class="obj-hash">a3f7c2d9...</span> <span style="color:var(--text3);">(previous commit)</span><br>
+      <span class="obj-field">author </span><span class="obj-val">John Doe &lt;john@example.com&gt; 1703001600 +0530</span><br>
+      <span class="obj-field">committer </span><span class="obj-val">John Doe &lt;john@example.com&gt; 1703001600 +0530</span><br>
+      <br>
+      <span class="obj-val">Add login feature</span>
+    </div>
+    <p style="margin-top:8px;">Every commit stores: a pointer to a <strong>tree</strong> (the root directory snapshot), a pointer to the <strong>parent</strong> commit, author/committer info, and your message. The commit's hash is computed from all of this.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-purple"></div>Commit Graph Visualization</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> commit-graph.viz</div>
+      <div class="viz-canvas">
+        <svg class="git-svg" viewBox="0 0 600 110" xmlns="http://www.w3.org/2000/svg">
+          <!-- Commit line -->
+          <line x1="80" y1="60" x2="200" y2="60" stroke="#252836" stroke-width="2"/>
+          <line x1="200" y1="60" x2="330" y2="60" stroke="#252836" stroke-width="2"/>
+          <line x1="330" y1="60" x2="460" y2="60" stroke="#4f9eff" stroke-width="2" stroke-dasharray="6,3"/>
+          <!-- Arrow markers -->
+          <polygon points="200,56 192,60 200,64" fill="#252836"/>
+          <polygon points="330,56 322,60 330,64" fill="#252836"/>
+          <polygon points="460,56 452,60 460,64" fill="#4f9eff"/>
+          <!-- C1 -->
+          <circle cx="80" cy="60" r="20" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+          <text x="80" y="65" text-anchor="middle" fill="#4f9eff" font-size="10" font-family="JetBrains Mono">c1a</text>
+          <text x="80" y="92" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">Initial</text>
+          <!-- C2 -->
+          <circle cx="200" cy="60" r="20" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+          <text x="200" y="65" text-anchor="middle" fill="#4f9eff" font-size="10" font-family="JetBrains Mono">f3b</text>
+          <text x="200" y="92" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">Add nav</text>
+          <!-- C3 main -->
+          <circle cx="330" cy="60" r="20" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+          <text x="330" y="65" text-anchor="middle" fill="#4f9eff" font-size="10" font-family="JetBrains Mono">9d2</text>
+          <text x="330" y="92" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">Add auth</text>
+          <!-- labels -->
+          <rect x="254" y="10" width="52" height="18" rx="4" fill="#3dd68c"/>
+          <text x="280" y="23" text-anchor="middle" fill="#0a0b0f" font-size="9" font-weight="bold" font-family="JetBrains Mono">main</text>
+          <line x1="280" y1="28" x2="330" y2="42" stroke="#3dd68c" stroke-width="1" stroke-dasharray="3,2"/>
+          <rect x="380" y="10" width="52" height="18" rx="4" fill="#ffd166"/>
+          <text x="406" y="23" text-anchor="middle" fill="#0a0b0f" font-size="9" font-weight="bold" font-family="JetBrains Mono">HEAD</text>
+          <line x1="406" y1="28" x2="406" y2="42" stroke="#ffd166" stroke-width="1" stroke-dasharray="3,2"/>
+          <!-- Next commit (animating) -->
+          <circle cx="460" cy="60" r="20" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2" opacity="0.5" id="new-commit-node">
+            <animate attributeName="opacity" from="0" to="1" dur="1s" begin="0s" fill="freeze"/>
+          </circle>
+          <text x="460" y="65" text-anchor="middle" fill="#4f9eff" font-size="10" font-family="JetBrains Mono" opacity="0.5">
+            <animate attributeName="opacity" from="0" to="1" dur="1s" begin="0s" fill="freeze"/>
+            a7f
+          </text>
+          <text x="460" y="92" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">New!</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Step-by-Step: What Happens on Commit</div>
+    <ul class="steps-list">
+      <li>Git reads the staging area (index) to know what files are staged</li>
+      <li>Creates <strong>blob objects</strong> for each file's content (if not already stored)</li>
+      <li>Creates <strong>tree objects</strong> representing the directory structure</li>
+      <li>Creates a <strong>commit object</strong> pointing to the root tree + parent commit hash</li>
+      <li>Computes SHA-1 hash of the commit object → this is the commit ID</li>
+      <li>Updates the current branch ref (e.g. <code>refs/heads/main</code>) to point to the new commit</li>
+      <li>HEAD still points to the branch, which now points to the new commit</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-yellow"></div>Writing Good Commit Messages</div>
+    <div class="code-block">
+<span class="comment"># ✓ Good: subject line + blank + body</span>
+<span class="str">feat: add OAuth login with Google provider
+
+- Implements /auth/google route
+- Stores tokens in HTTP-only cookies
+- Adds user session to Redis store
+
+Closes #142</span>
+
+<span class="comment"># ✗ Bad: vague, no context</span>
+<span class="str">fix stuff</span>
+<span class="str">WIP</span>
+<span class="str">asdfghjkl</span>
+    </div>
+  </div>
+
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-commit" target="_blank">https://git-scm.com/docs/git-commit</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository" target="_blank">https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository</a>
+    <a href="https://www.conventionalcommits.org" target="_blank">https://www.conventionalcommits.org</a>
+  </div>
+
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-commit','git-status',15)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT STATUS -->
+<div id="page-git-status" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-basics">Git Basics</div>
+    <div class="topic-title">git status</div>
+    <div class="topic-subtitle">Show the current state of the working directory and staging area.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Command</div>
+    <div class="code-block">
+<span class="cmd">git status</span>              <span class="comment"># Full output</span>
+<span class="cmd">git status</span> <span class="flag">-s</span>           <span class="comment"># Short format</span>
+<span class="cmd">git status</span> <span class="flag">--short</span> <span class="flag">--branch</span>
+    </div>
+    <div class="analogy-box">git status is like looking in the mirror before you leave the house — it tells you exactly what changed, what's staged, and what's untracked so you know what you're working with.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Reading Status Output</div>
+    <div class="code-block">
+On branch main
+Your branch is up to date with 'origin/main'.
+
+<span class="term-info">Changes to be committed:</span>  <span class="comment">(staged)</span>
+  <span class="term-success">(use "git restore --staged" to unstage)</span>
+        <span class="term-success">new file:   feature.js</span>
+        <span class="term-success">modified:   index.html</span>
+
+<span class="term-warn">Changes not staged for commit:</span>  <span class="comment">(modified, not staged)</span>
+        <span class="term-warn">modified:   style.css</span>
+
+<span class="term-error">Untracked files:</span>
+        <span class="term-error">temp.txt</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Short Format Cheatsheet</div>
+    <table>
+      <tr><th>Symbol</th><th>Meaning</th><th>Area</th></tr>
+      <tr><td><span class="chip chip-green">M</span></td><td>Modified</td><td>Left = staged, Right = working</td></tr>
+      <tr><td><span class="chip chip-green">A</span></td><td>Added (new file staged)</td><td>Staging area</td></tr>
+      <tr><td><span class="chip chip-red">D</span></td><td>Deleted</td><td>Staged or working</td></tr>
+      <tr><td><span class="chip chip-red">??</span></td><td>Untracked</td><td>Working directory only</td></tr>
+      <tr><td><span class="chip chip-orange">R</span></td><td>Renamed</td><td>Staging area</td></tr>
+    </table>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-status" target="_blank">https://git-scm.com/docs/git-status</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-status','git-log',10)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT LOG -->
+<div id="page-git-log" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-basics">Git Basics</div>
+    <div class="topic-title">git log</div>
+    <div class="topic-subtitle">View the commit history of the repository.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Commands</div>
+    <div class="code-block">
+<span class="cmd">git log</span>                           <span class="comment"># Full history</span>
+<span class="cmd">git log</span> <span class="flag">--oneline</span>                  <span class="comment"># One line per commit</span>
+<span class="cmd">git log</span> <span class="flag">--oneline --graph --all</span>    <span class="comment"># Visual branch graph</span>
+<span class="cmd">git log</span> <span class="flag">-5</span>                         <span class="comment"># Last 5 commits</span>
+<span class="cmd">git log</span> <span class="flag">--author=</span><span class="str">"John"</span>            <span class="comment"># Filter by author</span>
+<span class="cmd">git log</span> <span class="flag">--since=</span><span class="str">"2 weeks ago"</span>      <span class="comment"># Filter by date</span>
+<span class="cmd">git log</span> <span class="flag">--grep=</span><span class="str">"feat:"</span>              <span class="comment"># Search in commit messages</span>
+<span class="cmd">git log</span> <span class="flag">-p</span>                          <span class="comment"># Show diffs in each commit</span>
+    </div>
+    <div class="analogy-box">git log is your project's journal. Every entry (commit) shows what changed, who changed it, and when. The --graph flag makes it look like a subway map of your project's timeline.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Sample Log Output</div>
+    <div class="code-block">
+<span class="hash">commit 9d2f3a1b4c5e6d7e8f9a0b1c2d3e4f5a6b7c</span>
+Author: Jane Dev &lt;jane@example.com&gt;
+Date:   Mon Dec 18 10:30:00 2023 +0530
+
+    feat: add user authentication
+
+<span class="hash">commit f3bc1d2e3a4f5b6c7d8e9f0a1b2c3d4e5f6</span>
+Author: Jane Dev &lt;jane@example.com&gt;
+Date:   Sun Dec 17 14:15:00 2023 +0530
+
+    chore: add .gitignore
+    </div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-log" target="_blank">https://git-scm.com/docs/git-log</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History" target="_blank">https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-log','git-branch',10)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT BRANCH -->
+<div id="page-git-branch" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-branch">Branching</div>
+    <div class="topic-title">git branch</div>
+    <div class="topic-subtitle">Branches let you develop features, fix bugs, or experiment in isolated parallel timelines.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Commands</div>
+    <div class="code-block">
+<span class="cmd">git branch</span>                    <span class="comment"># List local branches</span>
+<span class="cmd">git branch</span> <span class="flag">-a</span>                <span class="comment"># List all (local + remote)</span>
+<span class="cmd">git branch</span> <span class="str">feature/login</span>     <span class="comment"># Create a new branch</span>
+<span class="cmd">git branch</span> <span class="flag">-d</span> <span class="str">feature/login</span>  <span class="comment"># Delete branch (safe)</span>
+<span class="cmd">git branch</span> <span class="flag">-D</span> <span class="str">feature/login</span>  <span class="comment"># Force delete branch</span>
+<span class="cmd">git branch</span> <span class="flag">-m</span> <span class="str">old-name new-name</span> <span class="comment"># Rename branch</span>
+    </div>
+    <div class="analogy-box">A branch is like a parallel universe 🌌 — an exact copy of the main timeline where you can freely experiment. If your experiment succeeds, you merge it back. If not, you just delete the branch — the main timeline is untouched.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>What is a Branch Internally?</div>
+    <p>A branch is just a <strong>pointer</strong> — a simple file in <code>.git/refs/heads/</code> containing the hash of the commit it points to. That's it. Creating a branch is almost instant because Git just creates a 41-byte file.</p>
+    <div class="code-block">
+<span class="comment"># .git/refs/heads/main contains just:</span>
+<span class="hash">9d2f3a1b4c5e6d7e8f9a0b1c2d3e4f5a6b7c8d9</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Branch Visualization</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> branch-creation.viz</div>
+      <div class="viz-canvas">
+        <svg class="git-svg" viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg">
+          <!-- Main line -->
+          <line x1="80" y1="80" x2="200" y2="80" stroke="#252836" stroke-width="2"/>
+          <line x1="200" y1="80" x2="320" y2="80" stroke="#252836" stroke-width="2"/>
+          <!-- Branch fork -->
+          <line x1="320" y1="80" x2="440" y2="40" stroke="#3dd68c" stroke-width="2"/>
+          <line x1="320" y1="80" x2="440" y2="120" stroke="#4f9eff" stroke-width="2" opacity="0.5"/>
+          <!-- Commits -->
+          <circle cx="80" cy="80" r="20" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+          <text x="80" y="85" text-anchor="middle" fill="#5c6280" font-size="10" font-family="JetBrains Mono">c1</text>
+          <circle cx="200" cy="80" r="20" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+          <text x="200" y="85" text-anchor="middle" fill="#5c6280" font-size="10" font-family="JetBrains Mono">c2</text>
+          <!-- Branch point -->
+          <circle cx="320" cy="80" r="20" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+          <text x="320" y="85" text-anchor="middle" fill="#4f9eff" font-size="10" font-family="JetBrains Mono">c3</text>
+          <!-- Feature branch commit -->
+          <circle cx="440" cy="40" r="20" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+          <text x="440" y="45" text-anchor="middle" fill="#3dd68c" font-size="10" font-family="JetBrains Mono">c4</text>
+          <!-- Main branch (future) -->
+          <circle cx="440" cy="120" r="20" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2" opacity="0.4"/>
+          <text x="440" y="125" text-anchor="middle" fill="#4f9eff" font-size="10" font-family="JetBrains Mono" opacity="0.4">c5</text>
+          <!-- Labels -->
+          <rect x="360" y="10" width="120" height="18" rx="4" fill="#3dd68c"/>
+          <text x="420" y="23" text-anchor="middle" fill="#0a0b0f" font-size="9" font-weight="bold" font-family="JetBrains Mono">feature/login</text>
+          <rect x="360" y="140" width="52" height="18" rx="4" fill="#4f9eff" opacity="0.4"/>
+          <text x="386" y="153" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold" font-family="JetBrains Mono" opacity="0.4">main</text>
+          <!-- main label left -->
+          <rect x="240" y="10" width="52" height="18" rx="4" fill="#4f9eff"/>
+          <text x="266" y="23" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold" font-family="JetBrains Mono">main</text>
+          <line x1="266" y1="28" x2="320" y2="62" stroke="#4f9eff" stroke-width="1" stroke-dasharray="3,2"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-branch" target="_blank">https://git-scm.com/docs/git-branch</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell" target="_blank">https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-branch','git-checkout',15)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT CHECKOUT/SWITCH -->
+<div id="page-git-checkout" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-branch">Branching</div>
+    <div class="topic-title">git switch / checkout</div>
+    <div class="topic-subtitle">Move between branches or create and switch to a new branch in one command.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Modern way (git 2.23+)</span>
+<span class="cmd">git switch</span> <span class="str">feature/login</span>         <span class="comment"># Switch to branch</span>
+<span class="cmd">git switch</span> <span class="flag">-c</span> <span class="str">feature/auth</span>       <span class="comment"># Create + switch</span>
+
+<span class="comment"># Classic way (still works)</span>
+<span class="cmd">git checkout</span> <span class="str">feature/login</span>
+<span class="cmd">git checkout</span> <span class="flag">-b</span> <span class="str">feature/auth</span>    <span class="comment"># Create + switch</span>
+
+<span class="comment"># Go back to previous branch</span>
+<span class="cmd">git switch</span> <span class="flag">-</span>
+
+<span class="comment"># Detach HEAD at a specific commit</span>
+<span class="cmd">git checkout</span> <span class="hash">a3f7c2d</span>
+    </div>
+    <div class="analogy-box">Switching branches is like switching between parallel universes. When you switch, your working directory files change to match the state of that branch's latest commit. It's instant — Git just updates your files.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>HEAD Movement Visualization</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> head-movement.viz</div>
+      <div class="viz-canvas">
+        <div class="ba-grid">
+          <div>
+            <div class="ba-label ba-before">ON: main</div>
+            <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:120px;">
+              <circle cx="80" cy="70" r="18" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+              <text x="80" y="75" text-anchor="middle" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">c2</text>
+              <circle cx="160" cy="70" r="18" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+              <text x="160" y="75" text-anchor="middle" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">c3</text>
+              <line x1="98" y1="70" x2="142" y2="70" stroke="#252836" stroke-width="2"/>
+              <rect x="130" y="12" width="52" height="16" rx="4" fill="#4f9eff"/>
+              <text x="156" y="24" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold" font-family="JetBrains Mono">main</text>
+              <line x1="156" y1="28" x2="160" y2="52" stroke="#4f9eff" stroke-width="1" stroke-dasharray="3,2"/>
+              <rect x="120" y="95" width="52" height="16" rx="4" fill="#ffd166"/>
+              <text x="146" y="107" text-anchor="middle" fill="#0a0b0f" font-size="8" font-weight="bold" font-family="JetBrains Mono">HEAD</text>
+              <line x1="146" y1="95" x2="156" y2="28" stroke="#ffd166" stroke-width="1" stroke-dasharray="3,2"/>
+            </svg>
+          </div>
+          <div class="ba-arrow"><div>→</div><div class="cmd-text">git switch feature</div></div>
+          <div>
+            <div class="ba-label ba-after">ON: feature</div>
+            <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:120px;">
+              <circle cx="80" cy="70" r="18" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+              <text x="80" y="75" text-anchor="middle" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">c2</text>
+              <circle cx="160" cy="40" r="18" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+              <text x="160" y="45" text-anchor="middle" fill="#3dd68c" font-size="9" font-family="JetBrains Mono">c4</text>
+              <line x1="98" y1="70" x2="142" y2="44" stroke="#252836" stroke-width="2"/>
+              <rect x="100" y="8" width="120" height="16" rx="4" fill="#3dd68c"/>
+              <text x="160" y="20" text-anchor="middle" fill="#0a0b0f" font-size="8" font-weight="bold" font-family="JetBrains Mono">feature ← HEAD</text>
+              <line x1="160" y1="24" x2="160" y2="22" stroke="#3dd68c" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Detached HEAD State</div>
+    <p>When you checkout a specific commit hash (not a branch name), HEAD is "detached" — it points directly to the commit, not through a branch. Any new commits you make here will be lost unless you create a branch!</p>
+    <div class="alert alert-warn"><span class="alert-icon">⚠️</span> Always create a branch before committing in detached HEAD state: <code>git switch -c my-branch</code></div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-switch" target="_blank">https://git-scm.com/docs/git-switch</a>
+    <a href="https://git-scm.com/docs/git-checkout" target="_blank">https://git-scm.com/docs/git-checkout</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-checkout','git-merge',15)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT MERGE -->
+<div id="page-git-merge" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-branch">Branching</div>
+    <div class="topic-title">git merge</div>
+    <div class="topic-subtitle">Combine the history of two branches. Git supports fast-forward and three-way merge commits.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Merge feature into current branch (main)</span>
+<span class="cmd">git merge</span> <span class="str">feature/login</span>
+
+<span class="comment"># Merge with a commit message always (no fast-forward)</span>
+<span class="cmd">git merge</span> <span class="flag">--no-ff</span> <span class="str">feature/login</span>
+
+<span class="comment"># Merge but squash all commits into one</span>
+<span class="cmd">git merge</span> <span class="flag">--squash</span> <span class="str">feature/login</span>
+
+<span class="comment"># Abort a merge in progress (during conflicts)</span>
+<span class="cmd">git merge</span> <span class="flag">--abort</span>
+    </div>
+    <div class="analogy-box">Merging is like writing two stories separately and then combining them into one book. If the stories don't overlap, Git can automatically weave them together. If they conflict (two people edited the same paragraph), you have to decide which version to keep.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Fast-Forward vs Three-Way Merge</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> merge-types.viz</div>
+      <div class="viz-canvas">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">⚡ FAST-FORWARD (no divergence)</div>
+          <svg viewBox="0 0 560 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:80px;">
+            <line x1="60" y1="40" x2="140" y2="40" stroke="#252836" stroke-width="2"/>
+            <line x1="140" y1="40" x2="220" y2="40" stroke="#252836" stroke-width="2"/>
+            <line x1="220" y1="40" x2="300" y2="40" stroke="#3dd68c" stroke-width="2"/>
+            <circle cx="60" cy="40" r="16" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+            <text x="60" y="44" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">c1</text>
+            <circle cx="140" cy="40" r="16" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+            <text x="140" y="44" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">c2</text>
+            <circle cx="220" cy="40" r="16" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+            <text x="220" y="44" text-anchor="middle" fill="#3dd68c" font-size="9" font-family="JetBrains Mono">c3</text>
+            <circle cx="300" cy="40" r="16" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+            <text x="300" y="44" text-anchor="middle" fill="#3dd68c" font-size="9" font-family="JetBrains Mono">c4</text>
+            <rect x="240" y="10" width="120" height="16" rx="4" fill="#3dd68c"/>
+            <text x="300" y="22" text-anchor="middle" fill="#0a0b0f" font-size="8" font-weight="bold" font-family="JetBrains Mono">main + feature</text>
+            <text x="440" y="44" fill="#5c6280" font-size="9" font-family="JetBrains Mono">main just moves forward →</text>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">🔗 THREE-WAY MERGE (diverged histories)</div>
+          <svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:120px;">
+            <line x1="60" y1="60" x2="160" y2="60" stroke="#252836" stroke-width="2"/>
+            <line x1="160" y1="60" x2="260" y2="30" stroke="#3dd68c" stroke-width="2"/>
+            <line x1="160" y1="60" x2="260" y2="90" stroke="#4f9eff" stroke-width="2"/>
+            <line x1="260" y1="30" x2="380" y2="60" stroke="#ffd166" stroke-width="2"/>
+            <line x1="260" y1="90" x2="380" y2="60" stroke="#ffd166" stroke-width="2"/>
+            <circle cx="60" cy="60" r="16" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+            <text x="60" y="65" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">c1</text>
+            <circle cx="160" cy="60" r="16" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+            <text x="160" y="65" text-anchor="middle" fill="#5c6280" font-size="9" font-family="JetBrains Mono">c2</text>
+            <circle cx="260" cy="30" r="16" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+            <text x="260" y="35" text-anchor="middle" fill="#3dd68c" font-size="9" font-family="JetBrains Mono">c3</text>
+            <circle cx="260" cy="90" r="16" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+            <text x="260" y="95" text-anchor="middle" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">c4</text>
+            <circle cx="380" cy="60" r="16" fill="#1c1f2a" stroke="#ffd166" stroke-width="2"/>
+            <text x="380" y="65" text-anchor="middle" fill="#ffd166" font-size="9" font-family="JetBrains Mono">M</text>
+            <rect x="310" y="8" width="100" height="16" rx="4" fill="#ffd166"/>
+            <text x="360" y="20" text-anchor="middle" fill="#0a0b0f" font-size="8" font-weight="bold" font-family="JetBrains Mono">merge commit</text>
+            <text x="30" y="30" fill="#3dd68c" font-size="9" font-family="JetBrains Mono">feature →</text>
+            <text x="30" y="100" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">main →</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Resolving Merge Conflicts</div>
+    <div class="code-block">
+<span class="comment"># Git marks conflict in file like this:</span>
+<span class="flag">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> HEAD
+  <span class="str">return "Hello from main";</span>
+<span class="flag">=======</span>
+  <span class="str">return "Hello from feature";</span>
+<span class="flag">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> feature/login
+
+<span class="comment"># 1. Edit file to resolve (keep what you want)</span>
+<span class="comment"># 2. Stage the resolved file</span>
+<span class="cmd">git add</span> <span class="str">app.js</span>
+<span class="comment"># 3. Complete the merge</span>
+<span class="cmd">git commit</span>
+    </div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-merge" target="_blank">https://git-scm.com/docs/git-merge</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging" target="_blank">https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-merge','git-clone',20)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- REMOTE: CLONE -->
+<div id="page-git-clone" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-remote">Remote Git</div>
+    <div class="topic-title">git clone</div>
+    <div class="topic-subtitle">Create a local copy of a remote repository, with all history and branches.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Clone from GitHub</span>
+<span class="cmd">git clone</span> <span class="str">https://github.com/user/repo.git</span>
+
+<span class="comment"># Clone into specific folder name</span>
+<span class="cmd">git clone</span> <span class="str">https://github.com/user/repo.git</span> <span class="str">my-folder</span>
+
+<span class="comment"># Clone specific branch only</span>
+<span class="cmd">git clone</span> <span class="flag">-b</span> <span class="str">develop</span> <span class="str">https://github.com/user/repo.git</span>
+
+<span class="comment"># Clone with SSH (recommended for push access)</span>
+<span class="cmd">git clone</span> <span class="str">git@github.com:user/repo.git</span>
+
+<span class="comment"># Shallow clone (only last N commits)</span>
+<span class="cmd">git clone</span> <span class="flag">--depth=1</span> <span class="str">https://github.com/user/repo.git</span>
+    </div>
+    <div class="analogy-box">git clone is like photocopying an entire book 📚 — you get a complete copy of the remote repository including all chapters (commits), bookmarks (branches), and the index (objects). Your copy is independent: writing in it doesn't change the original.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>What Clone Does Internally</div>
+    <ul class="steps-list">
+      <li>Creates a new directory with the repo name</li>
+      <li>Initializes a <code>.git/</code> folder inside it</li>
+      <li>Downloads all objects from the remote (commits, trees, blobs)</li>
+      <li>Configures <code>origin</code> as the remote alias pointing to the URL</li>
+      <li>Creates remote-tracking branches like <code>origin/main</code></li>
+      <li>Checks out the default branch (usually <code>main</code>) in your working directory</li>
+    </ul>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-clone" target="_blank">https://git-scm.com/docs/git-clone</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository" target="_blank">https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-clone','git-push',15)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT PUSH -->
+<div id="page-git-push" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-remote">Remote Git</div>
+    <div class="topic-title">git push</div>
+    <div class="topic-subtitle">Upload local commits to a remote repository branch.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Push current branch to origin</span>
+<span class="cmd">git push</span>
+
+<span class="comment"># Push and set upstream tracking</span>
+<span class="cmd">git push</span> <span class="flag">-u</span> origin main
+
+<span class="comment"># Push a specific branch</span>
+<span class="cmd">git push</span> origin <span class="str">feature/login</span>
+
+<span class="comment"># Force push (DANGEROUS — rewrites remote history)</span>
+<span class="cmd">git push</span> <span class="flag">--force</span>
+
+<span class="comment"># Safer force push (fails if remote changed)</span>
+<span class="cmd">git push</span> <span class="flag">--force-with-lease</span>
+
+<span class="comment"># Delete a remote branch</span>
+<span class="cmd">git push</span> origin <span class="flag">--delete</span> <span class="str">feature/login</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Push Visualization</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> push.viz</div>
+      <div class="viz-canvas">
+        <div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:16px;align-items:center;">
+          <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:14px;text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);font-weight:700;margin-bottom:8px;">💻 Local</div>
+            <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:60px;">
+              <circle cx="30" cy="30" r="14" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+              <text x="30" y="34" text-anchor="middle" fill="#5c6280" font-size="8" font-family="JetBrains Mono">c1</text>
+              <line x1="44" y1="30" x2="60" y2="30" stroke="#252836" stroke-width="1.5"/>
+              <circle cx="74" cy="30" r="14" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+              <text x="74" y="34" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">c2</text>
+              <rect x="50" y="6" width="52" height="14" rx="3" fill="#4f9eff"/>
+              <text x="76" y="17" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold" font-family="JetBrains Mono">main</text>
+            </svg>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:24px;">→</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);margin-top:4px;">git push</div>
+          </div>
+          <div style="background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:14px;text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--pink);font-weight:700;margin-bottom:8px;">☁️ Remote (origin)</div>
+            <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:60px;">
+              <circle cx="30" cy="30" r="14" fill="#1c1f2a" stroke="#252836" stroke-width="2"/>
+              <text x="30" y="34" text-anchor="middle" fill="#5c6280" font-size="8" font-family="JetBrains Mono">c1</text>
+              <line x1="44" y1="30" x2="60" y2="30" stroke="#4f9eff" stroke-width="1.5" stroke-dasharray="4,2"/>
+              <circle cx="74" cy="30" r="14" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+              <text x="74" y="34" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">c2</text>
+              <rect x="40" y="6" width="70" height="14" rx="3" fill="#f72585"/>
+              <text x="75" y="17" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold" font-family="JetBrains Mono">origin/main</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>When Push Fails</div>
+    <div class="alert alert-danger"><span class="alert-icon">🚫</span> Push is rejected when the remote has commits your local branch doesn't have. Solution: <code>git pull --rebase</code> first, then push.</div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-push" target="_blank">https://git-scm.com/docs/git-push</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-push','git-pull',15)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT PULL -->
+<div id="page-git-pull" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-remote">Remote Git</div>
+    <div class="topic-title">git pull</div>
+    <div class="topic-subtitle">Download changes from remote AND merge/rebase them into your current branch. Pull = fetch + merge.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Pull from tracking remote (fetch + merge)</span>
+<span class="cmd">git pull</span>
+
+<span class="comment"># Pull with rebase instead of merge (cleaner history)</span>
+<span class="cmd">git pull</span> <span class="flag">--rebase</span>
+
+<span class="comment"># Pull from specific remote and branch</span>
+<span class="cmd">git pull</span> origin main
+
+<span class="comment"># Configure pull to always rebase</span>
+<span class="cmd">git config</span> <span class="flag">--global</span> pull.rebase true
+    </div>
+    <div class="analogy-box">git pull is like receiving an updated newspaper 📰 and reading it immediately. fetch just gets the newspaper delivered, pull also reads it (merges into your branch).</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>pull = fetch + merge</div>
+    <div class="code-block">
+<span class="comment"># These two are equivalent to git pull:</span>
+<span class="cmd">git fetch</span> origin
+<span class="cmd">git merge</span> origin/main
+    </div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-pull" target="_blank">https://git-scm.com/docs/git-pull</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-pull','git-fetch',15)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT FETCH -->
+<div id="page-git-fetch" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-remote">Remote Git</div>
+    <div class="topic-title">git fetch</div>
+    <div class="topic-subtitle">Download all changes from the remote without modifying your working directory or current branch.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Commands</div>
+    <div class="code-block">
+<span class="cmd">git fetch</span>                  <span class="comment"># Fetch from all remotes</span>
+<span class="cmd">git fetch</span> origin           <span class="comment"># Fetch from origin</span>
+<span class="cmd">git fetch</span> <span class="flag">--all</span>            <span class="comment"># Fetch all remotes</span>
+<span class="cmd">git fetch</span> origin main      <span class="comment"># Fetch specific branch</span>
+<span class="cmd">git fetch</span> <span class="flag">--prune</span>          <span class="comment"># Remove deleted remote branches locally</span>
+    </div>
+    <div class="analogy-box">git fetch is like checking your mailbox 📬 — it tells you what's arrived (from remote), but you haven't read the mail yet (haven't merged). It's safe to do at any time; it never changes your local work.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Fetch vs Pull</div>
+    <table>
+      <tr><th>Action</th><th>git fetch</th><th>git pull</th></tr>
+      <tr><td>Downloads remote changes</td><td><span class="chip chip-green">✓</span></td><td><span class="chip chip-green">✓</span></td></tr>
+      <tr><td>Modifies working directory</td><td><span class="chip chip-red">✗</span></td><td><span class="chip chip-green">✓</span></td></tr>
+      <tr><td>Merges into current branch</td><td><span class="chip chip-red">✗</span></td><td><span class="chip chip-green">✓</span></td></tr>
+      <tr><td>Safe at any time</td><td><span class="chip chip-green">✓</span></td><td><span class="chip chip-yellow">Sometimes</span></td></tr>
+    </table>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-fetch" target="_blank">https://git-scm.com/docs/git-fetch</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-fetch','git-rebase',15)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT REBASE -->
+<div id="page-git-rebase" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-advanced">Advanced Git</div>
+    <div class="topic-title">git rebase</div>
+    <div class="topic-subtitle">Reapply commits on top of another base tip. Creates a linear history — no merge commits.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Rebase current branch onto main</span>
+<span class="cmd">git rebase</span> main
+
+<span class="comment"># Interactive rebase (edit, squash, reorder last 3 commits)</span>
+<span class="cmd">git rebase</span> <span class="flag">-i</span> HEAD~3
+
+<span class="comment"># Continue after resolving conflict</span>
+<span class="cmd">git rebase</span> <span class="flag">--continue</span>
+
+<span class="comment"># Skip current conflicting commit</span>
+<span class="cmd">git rebase</span> <span class="flag">--skip</span>
+
+<span class="comment"># Abort rebase entirely</span>
+<span class="cmd">git rebase</span> <span class="flag">--abort</span>
+    </div>
+    <div class="analogy-box">Imagine you're writing a report and discover someone updated the document template while you were writing. Rebase is like copying your changes and re-typing them onto the new template — same content, but now it's based on the latest version.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Merge vs Rebase — Visual</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> rebase-vs-merge.viz</div>
+      <div class="viz-canvas">
+        <div class="rebase-row">
+          <div class="branch-track">
+            <div class="branch-track-label">BEFORE (diverged)</div>
+            <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:120px;">
+              <circle cx="40" cy="60" r="14" fill="#1c1f2a" stroke="#252836" stroke-width="2"/><text x="40" y="64" text-anchor="middle" fill="#5c6280" font-size="8" font-family="JetBrains Mono">A</text>
+              <line x1="54" y1="60" x2="80" y2="40" stroke="#4f9eff" stroke-width="1.5"/>
+              <line x1="54" y1="60" x2="80" y2="80" stroke="#3dd68c" stroke-width="1.5"/>
+              <circle cx="94" cy="40" r="14" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/><text x="94" y="44" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">M1</text>
+              <circle cx="94" cy="80" r="14" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/><text x="94" y="84" text-anchor="middle" fill="#3dd68c" font-size="8" font-family="JetBrains Mono">F1</text>
+              <line x1="108" y1="40" x2="148" y2="40" stroke="#4f9eff" stroke-width="1.5"/>
+              <circle cx="162" cy="40" r="14" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/><text x="162" y="44" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">M2</text>
+              <text x="10" y="36" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">main</text>
+              <text x="10" y="96" fill="#3dd68c" font-size="8" font-family="JetBrains Mono">feat</text>
+            </svg>
+          </div>
+          <div class="branch-track">
+            <div class="branch-track-label">AFTER: git rebase main</div>
+            <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:120px;">
+              <line x1="26" y1="60" x2="80" y2="60" stroke="#252836" stroke-width="1.5"/>
+              <circle cx="40" cy="60" r="14" fill="#1c1f2a" stroke="#252836" stroke-width="2"/><text x="40" y="64" text-anchor="middle" fill="#5c6280" font-size="8" font-family="JetBrains Mono">A</text>
+              <circle cx="94" cy="60" r="14" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/><text x="94" y="64" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">M1</text>
+              <line x1="108" y1="60" x2="130" y2="60" stroke="#4f9eff" stroke-width="1.5"/>
+              <circle cx="144" cy="60" r="14" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/><text x="144" y="64" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">M2</text>
+              <line x1="158" y1="60" x2="178" y2="60" stroke="#3dd68c" stroke-width="1.5"/>
+              <circle cx="192" cy="60" r="14" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/><text x="192" y="64" text-anchor="middle" fill="#3dd68c" font-size="8" font-family="JetBrains Mono">F1'</text>
+              <rect x="160" y="30" width="50" height="16" rx="3" fill="#3dd68c"/>
+              <text x="185" y="42" text-anchor="middle" fill="#0a0b0f" font-size="7" font-weight="bold" font-family="JetBrains Mono">Linear!</text>
+            </svg>
+          </div>
+        </div>
+        <div class="alert alert-warn" style="margin-top:10px;"><span class="alert-icon">⚠️</span> <strong>Golden Rule:</strong> Never rebase commits that have been pushed to a shared remote branch. It rewrites history and forces others to re-clone or fix conflicts.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-purple"></div>Interactive Rebase (-i) Operations</div>
+    <div class="code-block">
+<span class="comment"># git rebase -i HEAD~3 opens editor with:</span>
+pick <span class="hash">a3f7c2d</span> Add login button
+pick <span class="hash">b4g8d3e</span> Fix typo in login
+pick <span class="hash">c9h4f1a</span> Add logout button
+
+<span class="comment"># Change 'pick' to:</span>
+<span class="str">squash</span>   <span class="comment"># Combine with previous commit</span>
+<span class="str">fixup</span>    <span class="comment"># Squash, discard this message</span>
+<span class="str">reword</span>   <span class="comment"># Change commit message</span>
+<span class="str">drop</span>     <span class="comment"># Remove this commit entirely</span>
+<span class="str">edit</span>     <span class="comment"># Stop to amend this commit</span>
+    </div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-rebase" target="_blank">https://git-scm.com/docs/git-rebase</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing" target="_blank">https://git-scm.com/book/en/v2/Git-Branching-Rebasing</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-rebase','git-cherry-pick',25)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- CHERRY PICK -->
+<div id="page-git-cherry-pick" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-advanced">Advanced Git</div>
+    <div class="topic-title">git cherry-pick</div>
+    <div class="topic-subtitle">Apply the changes from a specific commit to your current branch — without merging the whole branch.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Commands</div>
+    <div class="code-block">
+<span class="comment"># Apply a specific commit</span>
+<span class="cmd">git cherry-pick</span> <span class="hash">a3f7c2d</span>
+
+<span class="comment"># Apply a range of commits</span>
+<span class="cmd">git cherry-pick</span> <span class="hash">a3f7c2d</span>..<span class="hash">b9f2e1c</span>
+
+<span class="comment"># Cherry-pick without auto-committing</span>
+<span class="cmd">git cherry-pick</span> <span class="flag">-n</span> <span class="hash">a3f7c2d</span>
+
+<span class="comment"># Continue after resolving conflict</span>
+<span class="cmd">git cherry-pick</span> <span class="flag">--continue</span>
+
+<span class="comment"># Abort</span>
+<span class="cmd">git cherry-pick</span> <span class="flag">--abort</span>
+    </div>
+    <div class="analogy-box">Cherry-picking 🍒 is like copying one specific recipe from a cookbook into your own recipe collection — you get just that one recipe, not the entire book. Perfect when a specific bug fix on another branch needs to be applied to production.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Cherry-Pick Visualization</div>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> cherry-pick.viz</div>
+      <div class="viz-canvas">
+        <svg class="git-svg" viewBox="0 0 560 140" xmlns="http://www.w3.org/2000/svg">
+          <!-- main line -->
+          <text x="20" y="50" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">main</text>
+          <circle cx="80" cy="60" r="16" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+          <text x="80" y="64" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">A</text>
+          <line x1="96" y1="60" x2="160" y2="60" stroke="#4f9eff" stroke-width="2"/>
+          <circle cx="176" cy="60" r="16" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2"/>
+          <text x="176" y="64" text-anchor="middle" fill="#4f9eff" font-size="8" font-family="JetBrains Mono">B</text>
+          <line x1="192" y1="60" x2="320" y2="60" stroke="#4f9eff" stroke-width="2"/>
+          <!-- cherry-picked commit on main -->
+          <circle cx="336" cy="60" r="16" fill="#1c1f2a" stroke="#ffd166" stroke-width="2"/>
+          <text x="336" y="64" text-anchor="middle" fill="#ffd166" font-size="8" font-family="JetBrains Mono">X'</text>
+          <!-- feature line -->
+          <text x="20" y="115" fill="#3dd68c" font-size="9" font-family="JetBrains Mono">feat</text>
+          <circle cx="80" cy="120" r="16" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+          <text x="80" y="124" text-anchor="middle" fill="#3dd68c" font-size="8" font-family="JetBrains Mono">C</text>
+          <line x1="96" y1="120" x2="160" y2="120" stroke="#3dd68c" stroke-width="2"/>
+          <circle cx="176" cy="120" r="16" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+          <text x="176" y="124" text-anchor="middle" fill="#3dd68c" font-size="8" font-family="JetBrains Mono">X</text>
+          <line x1="192" y1="120" x2="256" y2="120" stroke="#3dd68c" stroke-width="2"/>
+          <circle cx="272" cy="120" r="16" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2"/>
+          <text x="272" y="124" text-anchor="middle" fill="#3dd68c" font-size="8" font-family="JetBrains Mono">D</text>
+          <!-- Cherry pick arrow -->
+          <path d="M 176 104 Q 260 80 320 68" stroke="#ffd166" stroke-width="1.5" stroke-dasharray="5,3" fill="none"/>
+          <text x="200" y="78" fill="#ffd166" font-size="8" font-family="JetBrains Mono">cherry-pick X</text>
+          <!-- cherry -->
+          <text x="168" y="112" font-size="12">🍒</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-cherry-pick" target="_blank">https://git-scm.com/docs/git-cherry-pick</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-cherry-pick','git-stash',25)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT STASH -->
+<div id="page-git-stash" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-advanced">Advanced Git</div>
+    <div class="topic-title">git stash</div>
+    <div class="topic-subtitle">Temporarily save uncommitted changes so you can switch context, then restore them later.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Commands</div>
+    <div class="code-block">
+<span class="cmd">git stash</span>                         <span class="comment"># Stash tracked changes</span>
+<span class="cmd">git stash push</span> <span class="flag">-m</span> <span class="str">"WIP: login"</span>   <span class="comment"># Stash with name</span>
+<span class="cmd">git stash</span> <span class="flag">-u</span>                      <span class="comment"># Include untracked files</span>
+<span class="cmd">git stash list</span>                    <span class="comment"># See all stashes</span>
+<span class="cmd">git stash pop</span>                     <span class="comment"># Apply most recent + delete it</span>
+<span class="cmd">git stash apply stash@{2}</span>         <span class="comment"># Apply specific stash (keep it)</span>
+<span class="cmd">git stash drop stash@{0}</span>          <span class="comment"># Delete specific stash</span>
+<span class="cmd">git stash clear</span>                   <span class="comment"># Delete ALL stashes</span>
+<span class="cmd">git stash branch</span> <span class="str">feature-name</span>    <span class="comment"># Create branch from stash</span>
+    </div>
+    <div class="analogy-box">Stash is like a desk drawer 🗃️ where you shove all your half-finished work papers when someone walks into your office. When they leave, you pull the papers back out and continue exactly where you left off.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Stash Flow</div>
+    <ul class="steps-list">
+      <li>You're working on feature X, half done</li>
+      <li>Urgent bug on main — you need to switch!</li>
+      <li><code>git stash</code> — saves your WIP, cleans working dir</li>
+      <li><code>git switch main</code> — now you're on clean main</li>
+      <li>Fix the bug, commit, push</li>
+      <li><code>git switch feature-x</code> then <code>git stash pop</code></li>
+      <li>Your WIP is restored exactly as it was</li>
+    </ul>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-stash" target="_blank">https://git-scm.com/docs/git-stash</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning" target="_blank">https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-stash','git-reset',20)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT RESET -->
+<div id="page-git-reset" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-advanced">Advanced Git</div>
+    <div class="topic-title">git reset</div>
+    <div class="topic-subtitle">Move HEAD (and optionally branch pointer) to a previous commit. Three modes: soft, mixed, hard.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>The Three Modes</div>
+    <div class="code-block">
+<span class="comment"># --soft: Move HEAD only. Keep staging + working dir.</span>
+<span class="cmd">git reset</span> <span class="flag">--soft</span> HEAD~1
+<span class="comment"># Use: "Undo last commit, keep changes staged"</span>
+
+<span class="comment"># --mixed (default): Move HEAD + unstage. Keep working dir.</span>
+<span class="cmd">git reset</span> HEAD~1
+<span class="comment"># Use: "Undo last commit, keep files but unstage them"</span>
+
+<span class="comment"># --hard: Move HEAD + unstage + discard working dir changes</span>
+<span class="cmd">git reset</span> <span class="flag">--hard</span> HEAD~1
+<span class="comment"># Use: "Completely discard last commit and its changes"</span>
+
+<span class="comment"># Reset to a specific commit</span>
+<span class="cmd">git reset</span> <span class="flag">--hard</span> <span class="hash">a3f7c2d</span>
+    </div>
+    <div class="analogy-box">git reset --soft is like pressing Ctrl+Z in your editor — the file still shows changes, they're just "undone" in history. --hard is like shredding the paper 🗑️ — the changes are gone.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-orange"></div>Reset Modes Comparison</div>
+    <table>
+      <tr><th>Mode</th><th>HEAD moves?</th><th>Staging Area</th><th>Working Dir</th></tr>
+      <tr><td><span class="chip chip-green">--soft</span></td><td>✓ Yes</td><td>Unchanged (staged)</td><td>Unchanged</td></tr>
+      <tr><td><span class="chip chip-yellow">--mixed</span></td><td>✓ Yes</td><td>Cleared (unstaged)</td><td>Unchanged</td></tr>
+      <tr><td><span class="chip chip-red">--hard</span></td><td>✓ Yes</td><td>Cleared</td><td>⚠️ Deleted</td></tr>
+    </table>
+    <div class="alert alert-danger" style="margin-top:12px;"><span class="alert-icon">🚫</span> <strong>Never use --hard on shared branches</strong> — it rewrites public history. Use <code>git revert</code> instead to safely undo commits on shared branches.</div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-reset" target="_blank">https://git-scm.com/docs/git-reset</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified" target="_blank">https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-reset','git-reflog',25)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- GIT REFLOG -->
+<div id="page-git-reflog" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-advanced">Advanced Git</div>
+    <div class="topic-title">git reflog</div>
+    <div class="topic-subtitle">The safety net. Reflog records every movement of HEAD — your last resort for recovering lost commits.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-red"></div>Commands</div>
+    <div class="code-block">
+<span class="cmd">git reflog</span>                          <span class="comment"># Show HEAD's history</span>
+<span class="cmd">git reflog</span> show main               <span class="comment"># Show main branch's history</span>
+
+<span class="comment"># Recover a "lost" commit after bad reset:</span>
+<span class="cmd">git reflog</span>                          <span class="comment"># Find the commit hash</span>
+<span class="cmd">git reset</span> <span class="flag">--hard</span> <span class="hash">HEAD@{3}</span>          <span class="comment"># Go back to it</span>
+
+<span class="comment"># Or create a branch from the lost commit</span>
+<span class="cmd">git checkout</span> <span class="flag">-b</span> recovery <span class="hash">HEAD@{3}</span>
+    </div>
+    <div class="analogy-box">Reflog is your time machine's flight recorder 🛩️. Even if you git reset --hard and seem to have lost everything, reflog remembers every position HEAD has ever been in, for up to 90 days.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>Sample Reflog Output</div>
+    <div class="code-block">
+<span class="hash">9d2f3a1</span> <span class="str">HEAD@{0}</span>: commit: Add login feature
+<span class="hash">f3bc1d2</span> <span class="str">HEAD@{1}</span>: reset: moving to HEAD~1
+<span class="hash">a3f7c2d</span> <span class="str">HEAD@{2}</span>: commit: Add auth module
+<span class="hash">b7e9f4c</span> <span class="str">HEAD@{3}</span>: checkout: moving from feature to main
+<span class="hash">c1a2b3d</span> <span class="str">HEAD@{4}</span>: commit: Initial commit
+    </div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/docs/git-reflog" target="_blank">https://git-scm.com/docs/git-reflog</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Internals-Maintenance-and-Data-Recovery" target="_blank">https://git-scm.com/book/en/v2/Git-Internals-Maintenance-and-Data-Recovery</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-reflog','git-head',20)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- HEAD -->
+<div id="page-git-head" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-advanced">Advanced Git</div>
+    <div class="topic-title">HEAD</div>
+    <div class="topic-subtitle">HEAD is a pointer to the currently checked-out commit. It's where you are in the repository right now.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-yellow"></div>What is HEAD?</div>
+    <p>HEAD is a special file at <code>.git/HEAD</code>. It usually contains a reference to a branch (attached HEAD), or a direct commit hash (detached HEAD).</p>
+    <div class="code-block">
+<span class="comment"># Attached HEAD (normal state)</span>
+<span class="cmd">cat</span> .git/HEAD
+<span class="str">ref: refs/heads/main</span>
+
+<span class="comment"># Detached HEAD (after git checkout &lt;commit-hash&gt;)</span>
+<span class="cmd">cat</span> .git/HEAD
+<span class="hash">a3f7c2d9e1b4f5c6d7e8f9a0b1c2d3e4f5a6b7c8</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="dot dot-blue"></div>HEAD Notation</div>
+    <div class="code-block">
+HEAD         <span class="comment"># Current commit</span>
+HEAD~1       <span class="comment"># Parent of current commit</span>
+HEAD~2       <span class="comment"># Grandparent</span>
+HEAD^        <span class="comment"># Same as HEAD~1</span>
+HEAD^^       <span class="comment"># Same as HEAD~2</span>
+HEAD^2       <span class="comment"># Second parent (merge commits only)</span>
+HEAD@{1}     <span class="comment"># Previous value from reflog</span>
+    </div>
+    <div class="analogy-box">HEAD is like a "You Are Here" marker 📍 on a map. As you move around (checkout different commits/branches), the marker follows you. When you commit, the marker and the branch pointer both advance together.</div>
+  </div>
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/book/en/v2/Git-Internals-Git-References" target="_blank">https://git-scm.com/book/en/v2/Git-Internals-Git-References</a>
+  </div>
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('git-head','internals',20)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- INTERNALS -->
+<div id="page-internals" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-internals">Git Internals</div>
+    <div class="topic-title">Git Object Model & DAG</div>
+    <div class="topic-subtitle">How Git actually stores data: blobs, trees, commits, and the Directed Acyclic Graph (DAG).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-purple"></div>The 4 Object Types</div>
+    <div class="two-col">
+      <div>
+        <div style="margin-bottom:10px;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--cyan);font-size:13px;margin-bottom:6px;">📄 Blob</div>
+          <p>Stores raw file content (no filename). Identified by SHA-1 hash of content.</p>
+          <div class="object-box">
+            <div class="obj-type">blob</div>
+            <span class="obj-val">console.log("hello");</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--orange);font-size:13px;margin-bottom:6px;">🌲 Tree</div>
+          <p>A directory. Contains pointers to blobs (files) and other trees (subdirectories).</p>
+          <div class="object-box">
+            <div class="obj-type">tree</div>
+            <span class="obj-field">100644 blob </span><span class="obj-hash">a3f7c2d</span><span class="obj-val"> index.html</span><br>
+            <span class="obj-field">100644 blob </span><span class="obj-hash">b9f2e1c</span><span class="obj-val"> style.css</span><br>
+            <span class="obj-field">040000 tree </span><span class="obj-hash">c1d2e3f</span><span class="obj-val"> src/</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="margin-bottom:10px;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--accent);font-size:13px;margin-bottom:6px;">💾 Commit</div>
+          <p>Points to a root tree + parent commit. Contains metadata (author, message).</p>
+          <div class="object-box">
+            <div class="obj-type">commit</div>
+            <span class="obj-field">tree </span><span class="obj-hash">4b825dc</span><br>
+            <span class="obj-field">parent </span><span class="obj-hash">a3f7c2d</span><br>
+            <span class="obj-field">author </span><span class="obj-val">Jane &lt;j@ex.com&gt;</span><br>
+            <br>
+            <span class="obj-val">Add login feature</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--yellow);font-size:13px;margin-bottom:6px;">🏷️ Tag</div>
+          <p>A named pointer to a specific commit. Annotated tags store extra metadata.</p>
+          <div class="object-box">
+            <div class="obj-type">tag</div>
+            <span class="obj-field">object </span><span class="obj-hash">9d2f3a1</span><br>
+            <span class="obj-field">type </span><span class="obj-val">commit</span><br>
+            <span class="obj-field">tag </span><span class="obj-val">v1.0.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-cyan"></div>The DAG — Directed Acyclic Graph</div>
+    <p>Git's history is a DAG — commits point backward to their parents, never in circles. This structure is what makes Git so powerful: branching is free, merging is safe, and history is immutable.</p>
+    <div class="viz-container">
+      <div class="viz-header"><div class="viz-dot viz-dot-r"></div><div class="viz-dot viz-dot-y"></div><div class="viz-dot viz-dot-g"></div> git-dag.viz</div>
+      <div class="viz-canvas">
+        <svg class="dag-svg" viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Arrows point backwards (commits point to parents) -->
+          <!-- root -->
+          <circle cx="80" cy="100" r="22" fill="#1c1f2a" stroke="#7c5cfc" stroke-width="2.5"/>
+          <text x="80" y="96" text-anchor="middle" fill="#7c5cfc" font-size="9" font-family="JetBrains Mono">root</text>
+          <text x="80" y="108" text-anchor="middle" fill="#5c6280" font-size="7" font-family="JetBrains Mono">c0a1</text>
+          <!-- c1 -->
+          <circle cx="200" cy="100" r="22" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2.5"/>
+          <text x="200" y="96" text-anchor="middle" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">c1</text>
+          <text x="200" y="108" text-anchor="middle" fill="#5c6280" font-size="7" font-family="JetBrains Mono">f3b2</text>
+          <!-- c2 main -->
+          <circle cx="320" cy="60" r="22" fill="#1c1f2a" stroke="#4f9eff" stroke-width="2.5"/>
+          <text x="320" y="56" text-anchor="middle" fill="#4f9eff" font-size="9" font-family="JetBrains Mono">c2</text>
+          <text x="320" y="68" text-anchor="middle" fill="#5c6280" font-size="7" font-family="JetBrains Mono">9d2f</text>
+          <!-- c3 feature -->
+          <circle cx="320" cy="140" r="22" fill="#1c1f2a" stroke="#3dd68c" stroke-width="2.5"/>
+          <text x="320" y="136" text-anchor="middle" fill="#3dd68c" font-size="9" font-family="JetBrains Mono">c3</text>
+          <text x="320" y="148" text-anchor="middle" fill="#5c6280" font-size="7" font-family="JetBrains Mono">a7f4</text>
+          <!-- merge commit -->
+          <circle cx="460" cy="100" r="22" fill="#1c1f2a" stroke="#ffd166" stroke-width="2.5"/>
+          <text x="460" y="96" text-anchor="middle" fill="#ffd166" font-size="9" font-family="JetBrains Mono">M</text>
+          <text x="460" y="108" text-anchor="middle" fill="#5c6280" font-size="7" font-family="JetBrains Mono">b8e1</text>
+          <!-- Edges (pointing backward = arrows go TO parent) -->
+          <line x1="102" y1="100" x2="178" y2="100" stroke="#7c5cfc" stroke-width="1.5"/>
+          <polygon points="102,96 110,100 102,104" fill="#7c5cfc"/>
+          <line x1="222" y1="90" x2="298" y2="68" stroke="#4f9eff" stroke-width="1.5"/>
+          <polygon points="228,86 234,93 222,90" fill="#4f9eff"/>
+          <line x1="222" y1="110" x2="298" y2="132" stroke="#4f9eff" stroke-width="1.5"/>
+          <polygon points="228,114 234,107 222,110" fill="#4f9eff"/>
+          <line x1="342" y1="74" x2="438" y2="92" stroke="#ffd166" stroke-width="1.5"/>
+          <polygon points="342,74 338,82 348,78" fill="#ffd166"/>
+          <line x1="342" y1="128" x2="438" y2="110" stroke="#ffd166" stroke-width="1.5"/>
+          <polygon points="342,128 338,120 348,124" fill="#ffd166"/>
+          <!-- Labels -->
+          <rect x="284" y="28" width="52" height="16" rx="4" fill="#4f9eff"/>
+          <text x="310" y="40" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold" font-family="JetBrains Mono">main</text>
+          <rect x="290" y="155" width="72" height="16" rx="4" fill="#3dd68c"/>
+          <text x="326" y="167" text-anchor="middle" fill="#0a0b0f" font-size="8" font-weight="bold" font-family="JetBrains Mono">feature</text>
+          <rect x="424" y="68" width="72" height="16" rx="4" fill="#ffd166"/>
+          <text x="460" y="80" text-anchor="middle" fill="#0a0b0f" font-size="8" font-weight="bold" font-family="JetBrains Mono">merge ← HEAD</text>
+          <!-- DAG label -->
+          <text x="10" y="190" fill="#5c6280" font-size="8" font-family="JetBrains Mono">← arrows show parent direction (commits are immutable)</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="dot dot-green"></div>Content-Addressed Storage</div>
+    <p>Git identifies every object by its SHA-1 hash. The hash is computed from the content itself — so identical content always produces the same hash, and Git stores it only once (deduplication is automatic).</p>
+    <div class="code-block">
+<span class="comment"># Inspect any object</span>
+<span class="cmd">git cat-file</span> <span class="flag">-t</span> <span class="hash">a3f7c2d</span>   <span class="comment"># Type: blob/tree/commit/tag</span>
+<span class="cmd">git cat-file</span> <span class="flag">-p</span> <span class="hash">a3f7c2d</span>   <span class="comment"># Pretty-print content</span>
+
+<span class="comment"># Manually hash content (see what hash a file would get)</span>
+<span class="cmd">git hash-object</span> file.txt
+
+<span class="comment"># See the tree of a commit</span>
+<span class="cmd">git ls-tree</span> HEAD
+    </div>
+  </div>
+
+  <div class="ref-box">
+    <div class="ref-title">📎 References</div>
+    <a href="https://git-scm.com/book/en/v2/Git-Internals-Git-Objects" target="_blank">https://git-scm.com/book/en/v2/Git-Internals-Git-Objects</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Internals-Git-References" target="_blank">https://git-scm.com/book/en/v2/Git-Internals-Git-References</a>
+    <a href="https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain" target="_blank">https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain</a>
+  </div>
+
+  <div class="topic-nav">
+    <button class="complete-btn" onclick="completeAndNext('internals','simulator',30)">✓ Complete &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- SIMULATOR -->
+<div id="page-simulator" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-sim">Interactive</div>
+    <div class="topic-title">Visual Git Simulator</div>
+    <div class="topic-subtitle">Type real Git commands and see the repository graph update live. Everything simulated in-browser.</div>
+  </div>
+
+  <div id="sim-graph-wrap">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:12px;">Repository Graph</div>
+    <canvas id="sim-graph-canvas"></canvas>
+  </div>
+
+  <div id="sim-state-info">
+    <div class="state-item"><div class="state-label">Current Branch</div><div class="state-value" id="sim-branch-display">main</div></div>
+    <div class="state-item"><div class="state-label">HEAD</div><div class="state-value" id="sim-head-display">—</div></div>
+    <div class="state-item"><div class="state-label">Staged Files</div><div class="state-value" id="sim-staged-display">none</div></div>
+  </div>
+
+  <div id="terminal-wrap">
+    <div id="terminal-header">
+      <div class="term-dots"><div class="term-dot td-r"></div><div class="term-dot td-y"></div><div class="term-dot td-g"></div></div>
+      <div id="terminal-title">GitMaster Terminal — myproject</div>
+    </div>
+    <div id="terminal-output">
+      <div class="term-line"><span class="term-info">GitMaster Visual Simulator v1.0</span></div>
+      <div class="term-line"><span class="term-info">Type Git commands below. Try: git init, git status, git add ., git commit -m "msg"</span></div>
+      <div class="term-line"><span class="term-info">Supported: init, add, commit, branch, checkout/switch, merge, log, stash, reset, status</span></div>
+      <div class="term-line" style="margin-top:8px;"></div>
+    </div>
+    <div id="terminal-input-row">
+      <span id="terminal-prompt-label">~/myproject $</span>
+      <input type="text" id="terminal-input" placeholder="git init" autocomplete="off" spellcheck="false"/>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title"><div class="dot dot-cyan"></div>Quick Command Reference</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <span class="cmd-pill">git init</span>
+      <span class="cmd-pill">git status</span>
+      <span class="cmd-pill">git add .</span>
+      <span class="cmd-pill">git commit -m "msg"</span>
+      <span class="cmd-pill">git branch name</span>
+      <span class="cmd-pill">git switch name</span>
+      <span class="cmd-pill">git merge name</span>
+      <span class="cmd-pill">git log --oneline</span>
+      <span class="cmd-pill">git stash</span>
+      <span class="cmd-pill">git stash pop</span>
+      <span class="cmd-pill">git reset --soft HEAD~1</span>
+      <span class="cmd-pill">git reset --hard HEAD~1</span>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="page-quiz" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-quiz">Quiz Arena</div>
+    <div class="topic-title">Quiz Arena</div>
+    <div class="topic-subtitle">Test your Git knowledge. 15 questions covering basics to advanced concepts.</div>
+  </div>
+
+  <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
+  <div id="quiz-score-display" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text3);margin-bottom:16px;">Score: <span id="quiz-score">0</span> / <span id="quiz-total">0</span></div>
+
+  <div id="quiz-container"></div>
+
+  <div style="margin-top:20px;display:flex;gap:10px;">
+    <button class="anim-btn" onclick="restartQuiz()">🔄 Restart Quiz</button>
+  </div>
+</div>
+
+<!-- EXAM -->
+<div id="page-exam" class="page">
+  <div class="topic-header">
+    <div class="topic-tag tag-exam">Final Exam</div>
+    <div class="topic-title">Final Exam</div>
+    <div class="topic-subtitle">20 questions · Timed · Mixed difficulty. Get ranked from Beginner to Git Expert.</div>
+  </div>
+
+  <div id="exam-start" style="text-align:center;padding:40px 0;">
+    <div style="font-size:48px;margin-bottom:16px;">🏁</div>
+    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:12px;">Are you ready?</div>
+    <p>20 questions · 30 minutes · All topics covered<br>Debugging scenarios, internals, FAANG-level questions</p>
+    <div style="margin-top:28px;">
+      <button class="start-btn" onclick="startExam()">Start Final Exam</button>
+    </div>
+  </div>
+
+  <div id="exam-running" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="quiz-progress" style="flex:1;margin-right:16px;"><div class="quiz-progress-fill" id="exam-progress-fill" style="width:0%"></div></div>
+      <div class="exam-timer" id="exam-timer">30:00</div>
+    </div>
+    <div id="exam-container"></div>
+  </div>
+
+  <div id="exam-results" style="display:none;">
+    <div class="exam-score-display">
+      <div style="font-size:48px;">🏆</div>
+      <div class="exam-score-num" id="exam-score-num">0/20</div>
+      <div class="exam-rank" id="exam-rank-display"></div>
+      <p id="exam-rank-desc"></p>
+      <div style="margin-top:24px;">
+        <button class="start-btn" onclick="restartExam()">🔄 Try Again</button>
+        <button class="outline-btn" onclick="navigate('home')">← Back to Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end app -->
+
+<!-- BADGES MODAL -->
+<div id="badges-modal">
+  <div class="modal-box">
+    <div class="modal-title">🏅 Your Badges</div>
+    <div class="badges-grid" id="badges-grid"></div>
+    <button class="modal-close" onclick="closeBadges()">Close</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span id="toast-icon">⭐</span><span id="toast-msg">+10 XP</span></div>
+
+<script>
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+const state = {
+  xp: 0,
+  level: 1,
+  completedTopics: new Set(),
+  earnedBadges: new Set(),
+  quizAnswered: {},
+  examAnswered: {},
+  examScore: 0,
+  examStarted: false,
+  examInterval: null,
+  examTimeLeft: 1800,
+  currentPage: 'home',
+
+  // Simulator state
+  sim: {
+    initialized: false,
+    staged: [],
+    commits: [],
+    branches: { main: -1 },
+    currentBranch: 'main',
+    stash: [],
+    files: ['index.html', 'app.js', 'style.css'],
+    workingChanges: ['index.html', 'app.js']
+  }
+};
+
+const XP_TO_NEXT = [200, 300, 400, 500, 600, 800, 1000, 1500, 2000];
+const LEVELS = ['Beginner', 'Novice', 'Apprentice', 'Developer', 'Engineer', 'Senior', 'Staff', 'Principal', 'Git Expert', 'Git Legend'];
+
+const BADGES = [
+  { id: 'first-commit', icon: '💾', name: 'First Commit', desc: 'Complete git commit topic' },
+  { id: 'branch-master', icon: '🌿', name: 'Branch Master', desc: 'Complete all branching topics' },
+  { id: 'remote-hero', icon: '🌐', name: 'Remote Hero', desc: 'Complete all remote topics' },
+  { id: 'conflict-resolver', icon: '⚔️', name: 'Conflict Resolver', desc: 'Complete git merge topic' },
+  { id: 'time-traveler', icon: '🕰️', name: 'Time Traveler', desc: 'Complete git reflog' },
+  { id: 'internals-expert', icon: '🔬', name: 'Internals Expert', desc: 'Complete Git Internals' },
+  { id: 'quiz-champion', icon: '🧪', name: 'Quiz Champion', desc: 'Score 80%+ on Quiz Arena' },
+  { id: 'git-master', icon: '👑', name: 'Git Master', desc: 'Score 80%+ on Final Exam' },
+];
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+
+  const pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('active');
+
+  const si = document.querySelector(`[data-page="${page}"]`);
+  if (si) si.classList.add('active');
+
+  document.getElementById('main').scrollTop = 0;
+  state.currentPage = page;
+
+  if (page === 'quiz') initQuiz();
+  if (page === 'exam' && !state.examStarted) initExamPrep();
+  if (page === 'simulator') initSimulator();
+}
+
+// ============================================================
+// XP & LEVELS
+// ============================================================
+function addXP(amount) {
+  state.xp += amount;
+  updateXPDisplay();
+  showToast(`+${amount} XP`, '⭐');
+}
+
+function updateXPDisplay() {
+  const lv = state.level - 1;
+  const needed = XP_TO_NEXT[Math.min(lv, XP_TO_NEXT.length - 1)];
+  let cumulative = 0;
+  for (let i = 0; i < lv; i++) cumulative += XP_TO_NEXT[i];
+  const current = state.xp - cumulative;
+  const pct = Math.min(100, (current / needed) * 100);
+
+  // Level up check
+  let lvXp = 0;
+  for (let i = 0; i < XP_TO_NEXT.length; i++) {
+    lvXp += XP_TO_NEXT[i];
+    if (state.xp < lvXp) { state.level = i + 1; break; }
+    if (i === XP_TO_NEXT.length - 1) state.level = XP_TO_NEXT.length + 1;
+  }
+
+  document.getElementById('xp-display').textContent = `${state.xp} XP`;
+  document.getElementById('xp-progress-fill').style.width = pct + '%';
+  document.getElementById('level-badge').textContent = `Lv.${state.level} ${LEVELS[Math.min(state.level - 1, LEVELS.length - 1)]}`;
+}
+
+function completeAndNext(current, next, xp) {
+  if (!state.completedTopics.has(current)) {
+    state.completedTopics.add(current);
+    addXP(xp);
+    markSidebarComplete(current);
+    checkBadges();
+  }
+  navigate(next);
+}
+
+function markSidebarComplete(page) {
+  const si = document.querySelector(`[data-page="${page}"]`);
+  if (si && !si.querySelector('.check')) {
+    const chk = document.createElement('span');
+    chk.className = 'check';
+    chk.textContent = '✓';
+    si.appendChild(chk);
+    const xpBadge = si.querySelector('.xp-badge');
+    if (xpBadge) xpBadge.remove();
+  }
+}
+
+// ============================================================
+// BADGES
+// ============================================================
+function checkBadges() {
+  const ct = state.completedTopics;
+  const newBadges = [];
+
+  if (ct.has('git-commit') && !state.earnedBadges.has('first-commit')) {
+    state.earnedBadges.add('first-commit'); newBadges.push('first-commit');
+  }
+  if (['git-branch','git-checkout','git-merge'].every(t => ct.has(t)) && !state.earnedBadges.has('branch-master')) {
+    state.earnedBadges.add('branch-master'); newBadges.push('branch-master');
+  }
+  if (['git-clone','git-push','git-pull','git-fetch'].every(t => ct.has(t)) && !state.earnedBadges.has('remote-hero')) {
+    state.earnedBadges.add('remote-hero'); newBadges.push('remote-hero');
+  }
+  if (ct.has('git-merge') && !state.earnedBadges.has('conflict-resolver')) {
+    state.earnedBadges.add('conflict-resolver'); newBadges.push('conflict-resolver');
+  }
+  if (ct.has('git-reflog') && !state.earnedBadges.has('time-traveler')) {
+    state.earnedBadges.add('time-traveler'); newBadges.push('time-traveler');
+  }
+  if (ct.has('internals') && !state.earnedBadges.has('internals-expert')) {
+    state.earnedBadges.add('internals-expert'); newBadges.push('internals-expert');
+  }
+
+  newBadges.forEach(b => {
+    const badge = BADGES.find(x => x.id === b);
+    if (badge) setTimeout(() => showToast(`🏅 Badge Earned: ${badge.name}`, '🏅'), 1000);
+  });
+}
+
+function openBadges() {
+  const grid = document.getElementById('badges-grid');
+  grid.innerHTML = BADGES.map(b => `
+    <div class="badge-item ${state.earnedBadges.has(b.id) ? 'earned' : ''}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}<br><span style="font-size:9px;color:var(--text3);">${b.desc}</span></div>
+    </div>
+  `).join('');
+  document.getElementById('badges-modal').classList.add('open');
+}
+
+function closeBadges() {
+  document.getElementById('badges-modal').classList.remove('open');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, icon = '⭐') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').textContent = icon;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// QUIZ DATA
+// ============================================================
+const QUIZ_QUESTIONS = [
+  {
+    q: "What does `git add .` do?",
+    opts: ["Commits all changes", "Stages all changes in current directory", "Creates a new branch", "Pushes to remote"],
+    ans: 1,
+    explain: "`git add .` stages all modified and new (untracked) files in the current directory for the next commit."
+  },
+  {
+    q: "What is a Git repository?",
+    opts: ["A cloud storage service", "A directory tracked by Git containing the .git folder", "A list of commit messages", "A remote server"],
+    ans: 1,
+    explain: "A Git repository is a project directory where Git has been initialized, containing a hidden .git folder that stores all history and metadata."
+  },
+  {
+    q: "Which command initializes a new Git repo?",
+    opts: ["git start", "git new", "git init", "git create"],
+    ans: 2,
+    explain: "`git init` creates the .git directory in your project, making it a Git repository."
+  },
+  {
+    q: "What does HEAD point to in a normal (non-detached) state?",
+    opts: ["The latest commit on origin/main", "The first commit in the repo", "The current branch", "Nothing"],
+    ans: 2,
+    explain: "In normal (attached) state, HEAD contains `ref: refs/heads/<branch-name>` — it points to the current branch, which in turn points to the latest commit."
+  },
+  {
+    q: "What is the difference between `git fetch` and `git pull`?",
+    opts: [
+      "fetch deletes remote branches, pull downloads them",
+      "fetch downloads remote changes without merging; pull downloads AND merges",
+      "They are identical",
+      "pull only downloads, fetch downloads and merges"
+    ],
+    ans: 1,
+    explain: "`git fetch` downloads remote changes to remote-tracking branches without touching your local branch. `git pull` = fetch + merge."
+  },
+  {
+    q: "Which command creates and switches to a new branch in one step?",
+    opts: ["git branch new-branch && git checkout new-branch", "git switch -c new-branch", "git new new-branch", "git branch -n new-branch"],
+    ans: 1,
+    explain: "`git switch -c branch-name` (or `git checkout -b branch-name`) creates and switches to a new branch in one command."
+  },
+  {
+    q: "What does a 'fast-forward merge' mean?",
+    opts: [
+      "A merge that resolves conflicts automatically",
+      "A merge that creates a new commit",
+      "Moving the branch pointer forward because there's no divergence",
+      "A force push to remote"
+    ],
+    ans: 2,
+    explain: "A fast-forward merge happens when the current branch has no new commits since the target branched off — Git simply moves the pointer forward. No new merge commit is created."
+  },
+  {
+    q: "What is a Git blob?",
+    opts: ["A type of branch", "The raw content of a file, stored as a Git object", "A compressed commit", "A remote server connection"],
+    ans: 1,
+    explain: "A blob is one of Git's four object types. It stores the raw content of a file (without filename or permissions). Files are identified by their SHA-1 hash of content."
+  },
+  {
+    q: "What does `git reset --hard HEAD~1` do?",
+    opts: [
+      "Stages all files",
+      "Creates a new commit undoing the last one",
+      "Moves HEAD back one commit AND discards all changes in staging and working dir",
+      "Moves HEAD back one commit but keeps files staged"
+    ],
+    ans: 2,
+    explain: "`git reset --hard HEAD~1` moves HEAD and branch pointer back one commit, and completely discards all changes in the staging area and working directory."
+  },
+  {
+    q: "What is `git stash` used for?",
+    opts: [
+      "Permanently delete uncommitted changes",
+      "Push changes to a hidden remote",
+      "Temporarily save uncommitted changes to work on something else",
+      "Merge two branches silently"
+    ],
+    ans: 2,
+    explain: "`git stash` saves your current working directory and staged changes to a stack, giving you a clean working directory to switch context. Use `git stash pop` to restore."
+  },
+  {
+    q: "What is the key difference between `git rebase` and `git merge`?",
+    opts: [
+      "Rebase is faster, merge is slower",
+      "Rebase rewrites history creating linear history; merge preserves history with a merge commit",
+      "They do the same thing",
+      "Rebase only works on local branches"
+    ],
+    ans: 1,
+    explain: "Rebase takes commits from one branch and reapplies them onto another, creating a linear history. Merge joins two branch histories together, preserving the true topology with a merge commit."
+  },
+  {
+    q: "What is `git reflog` used for?",
+    opts: [
+      "Show commits from remote repos",
+      "List all git commands ever run",
+      "Record every position HEAD has been at — used to recover lost commits",
+      "Show the commit graph"
+    ],
+    ans: 2,
+    explain: "Reflog is your safety net — it records every movement of HEAD (and branches) locally. Even after a `git reset --hard`, you can find and recover commits using reflog."
+  },
+  {
+    q: "What does `git cherry-pick a3f7c2d` do?",
+    opts: [
+      "Merges the entire branch containing that commit",
+      "Deletes that commit",
+      "Applies ONLY the changes from that specific commit to the current branch",
+      "Tags that commit"
+    ],
+    ans: 2,
+    explain: "`git cherry-pick <hash>` applies the changes introduced by one specific commit to your current branch, creating a new commit with those same changes."
+  },
+  {
+    q: "What is a 'detached HEAD' state?",
+    opts: [
+      "When HEAD points to the remote branch",
+      "When HEAD points directly to a commit hash instead of a branch name",
+      "When the repository has no commits",
+      "A corrupted git state"
+    ],
+    ans: 1,
+    explain: "Detached HEAD occurs when you checkout a specific commit hash (not a branch). HEAD no longer points through a branch — it points directly to a commit. New commits here can be 'lost' without creating a branch."
+  },
+  {
+    q: "In Git internals, what is a 'tree' object?",
+    opts: [
+      "A branching structure for code",
+      "A log of all commits",
+      "A Git object representing a directory, containing pointers to blobs and other trees",
+      "A binary blob of compressed data"
+    ],
+    ans: 2,
+    explain: "A tree object represents a directory snapshot. It contains a list of entries, each with mode, type (blob or tree), SHA-1 hash, and filename — mapping directory structure to content objects."
+  }
+];
+
+let quizState = { current: 0, score: 0, answered: {} };
+
+function initQuiz() {
+  quizState = { current: 0, score: 0, answered: {} };
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  const total = QUIZ_QUESTIONS.length;
+  document.getElementById('quiz-total').textContent = total;
+  document.getElementById('quiz-score').textContent = quizState.score;
+  document.getElementById('quiz-progress-fill').style.width = (Object.keys(quizState.answered).length / total * 100) + '%';
+
+  container.innerHTML = QUIZ_QUESTIONS.map((q, qi) => `
+    <div class="quiz-question" id="qq-${qi}">
+      <div class="quiz-q-text"><strong>Q${qi + 1}.</strong> ${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, oi) => `
+          <button class="quiz-option ${quizState.answered[qi] !== undefined ? (oi === q.ans ? 'correct' : (oi === quizState.answered[qi] ? 'wrong' : '')) : ''} answered"
+            onclick="answerQuiz(${qi}, ${oi})"
+            ${quizState.answered[qi] !== undefined ? 'disabled' : ''}>
+            <span class="quiz-opt-key">${String.fromCharCode(65 + oi)}</span>${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback ${quizState.answered[qi] !== undefined ? 'show ' + (quizState.answered[qi] === q.ans ? 'correct' : 'wrong') : ''}">
+        ${quizState.answered[qi] !== undefined ? (quizState.answered[qi] === q.ans ? '✓ Correct! ' : '✗ Wrong. ') + q.explain : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function answerQuiz(qi, oi) {
+  if (quizState.answered[qi] !== undefined) return;
+  quizState.answered[qi] = oi;
+  const q = QUIZ_QUESTIONS[qi];
+  if (oi === q.ans) {
+    quizState.score++;
+    addXP(5);
+  }
+  document.getElementById('quiz-score').textContent = quizState.score;
+  document.getElementById('quiz-progress-fill').style.width = (Object.keys(quizState.answered).length / QUIZ_QUESTIONS.length * 100) + '%';
+
+  // Update that question's UI
+  const container = document.getElementById('qq-' + qi);
+  const opts = container.querySelectorAll('.quiz-option');
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    btn.classList.remove('correct', 'wrong');
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === oi) btn.classList.add('wrong');
+  });
+  const fb = container.querySelector('.quiz-feedback');
+  fb.className = `quiz-feedback show ${oi === q.ans ? 'correct' : 'wrong'}`;
+  fb.textContent = (oi === q.ans ? '✓ Correct! ' : '✗ Wrong. ') + q.explain;
+
+  // Check if all answered
+  if (Object.keys(quizState.answered).length === QUIZ_QUESTIONS.length) {
+    const pct = quizState.score / QUIZ_QUESTIONS.length;
+    if (pct >= 0.8 && !state.earnedBadges.has('quiz-champion')) {
+      state.earnedBadges.add('quiz-champion');
+      setTimeout(() => showToast('🏅 Badge: Quiz Champion!', '🏅'), 1500);
+    }
+    addXP(20);
+    if (!state.completedTopics.has('quiz')) state.completedTopics.add('quiz');
+  }
+}
+
+function restartQuiz() { initQuiz(); }
+
+// ============================================================
+// FINAL EXAM
+// ============================================================
+const EXAM_QUESTIONS = [
+  { q: "You accidentally ran `git reset --hard HEAD~3`. How do you recover your commits?", opts: ["git undo", "git reflog, then git reset --hard HEAD@{N}", "git restore --all", "You cannot — they're gone"], ans: 1, explain: "git reflog tracks every position HEAD has been in. Find the hash before the reset, then git reset --hard to that hash." },
+  { q: "What is the SHA-1 hash used for in Git's object model?", opts: ["Encryption of private data", "Unique identification of content (content-addressed storage)", "Network authentication", "Branch naming"], ans: 1, explain: "Git uses SHA-1 to identify objects by their content. Same content = same hash. This makes Git's storage efficient and immutable." },
+  { q: "Which `git log` flag shows a visual ASCII branch graph?", opts: ["--visual", "--tree", "--graph", "--dag"], ans: 2, explain: "`git log --oneline --graph --all` shows a visual branch graph in the terminal." },
+  { q: "When should you NEVER use `git rebase`?", opts: ["On local-only feature branches", "On commits already pushed to a shared remote branch", "After `git fetch`", "Before creating a PR"], ans: 1, explain: "Rebasing rewrites history. If others have based work on those commits, rebasing shared history causes confusion and force-push situations." },
+  { q: "What does `git push --force-with-lease` do compared to `git push --force`?", opts: ["Same thing", "It fails if the remote has been updated since your last fetch — safer than --force", "It only pushes tags", "It creates a backup first"], ans: 1, explain: "--force-with-lease checks that no one else has pushed since you last fetched. If they have, it refuses the push — preventing overwriting others' work." },
+  { q: "What is stored in `.git/refs/heads/main`?", opts: ["The commit message of the latest commit", "The SHA-1 hash of the commit main points to", "A list of all commits", "The current branch name"], ans: 1, explain: "Branch refs are simple files containing the 40-character SHA-1 hash of the commit that branch points to." },
+  { q: "What happens when you `git commit` in detached HEAD state?", opts: ["Git creates a new branch automatically", "The commit is added to main", "The commit is created but not referenced by any branch — can be garbage collected", "Git throws an error"], ans: 2, explain: "Commits in detached HEAD state are 'dangling' — they exist in the object store but no branch points to them. Git may garbage collect them later." },
+  { q: "What does `git merge --squash feature` do?", opts: ["Deletes the feature branch", "Creates a regular merge commit", "Stages all feature changes as one unstaged change without committing", "Renames feature to main"], ans: 2, explain: "--squash takes all commits from feature, squashes them into your working directory as staged changes. You then make ONE commit. No merge commit, clean history." },
+  { q: "A `git commit` object contains which of the following? (Most complete answer)", opts: ["Only the file content", "The diff from the previous commit", "Pointer to root tree, parent commit hash(es), author, committer, message", "The branch name and tag"], ans: 2, explain: "A commit object stores: a pointer to a tree (root directory), parent commit SHA(s), author info, committer info, and the commit message." },
+  { q: "What is the difference between `git restore file.txt` and `git restore --staged file.txt`?", opts: [
+    "They are identical", 
+    "restore discards working dir changes; restore --staged unstages but keeps working dir changes",
+    "restore unstages; restore --staged discards",
+    "restore affects remote, --staged affects local"
+  ], ans: 1, explain: "`git restore file.txt` discards working directory changes. `git restore --staged file.txt` moves staged changes back to working directory (unstages)." },
+  { q: "Which Git command would you use to apply ONLY ONE specific commit from another branch?", opts: ["git merge --one", "git cherry-pick <hash>", "git rebase --single", "git apply <hash>"], ans: 1, explain: "`git cherry-pick <hash>` copies exactly one commit's changes onto your current branch." },
+  { q: "What does `git fetch --prune` do?", opts: ["Deletes local branches", "Removes remote-tracking branches that no longer exist on the remote", "Compresses the object database", "Fetches only new tags"], ans: 1, explain: "--prune removes stale remote-tracking refs (like origin/deleted-feature) that have been deleted on the remote server." },
+  { q: "You want to combine the last 3 commits into one. What's the best approach?", opts: ["git commit --combine 3", "git rebase -i HEAD~3, then squash/fixup", "git reset --soft HEAD~3 then git commit", "Both B and C work"], ans: 3, explain: "Both approaches work: interactive rebase (-i) lets you squash interactively; `git reset --soft HEAD~3` unstages all 3 commits' changes so you can re-commit them as one." },
+  { q: "What is a 'bare' repository (git init --bare)?", opts: ["A repo with no commits", "A repo with no .git folder", "A repo with no working directory — only the .git contents directly", "A public repo"], ans: 2, explain: "A bare repo has no working tree — it's just the .git directory contents at the top level. Used as central remote repositories (GitHub's server-side storage is bare)." },
+  { q: "What is the DAG in Git's context?", opts: ["Data Access Gateway", "Directed Acyclic Graph — the commit graph structure", "Delete And Git — a cleanup command", "Dynamic Alias Generator"], ans: 1, explain: "Git's commit history forms a DAG: commits are nodes, parent relationships are directed edges, and there are no cycles (you can't be your own ancestor)." },
+  { q: "What does `git stash pop` vs `git stash apply` differ in?", opts: ["pop restores AND removes from stash; apply only restores, keeping the stash entry", "They are identical", "apply removes from stash, pop only restores", "pop creates a branch, apply just restores files"], ans: 0, explain: "`git stash pop` = apply + drop (removes entry from stash list). `git stash apply` restores changes but keeps the stash entry for later reuse." },
+  { q: "In interactive rebase, what does `fixup` do?", opts: ["Fixes merge conflicts", "Squashes commit into previous commit AND discards this commit's message", "Edits the commit", "Creates a fixup branch"], ans: 1, explain: "`fixup` is like squash but silently discards the commit message, using only the previous commit's message. Perfect for 'fix typo' commits." },
+  { q: "What is `origin` in Git?", opts: ["A required git command", "The default alias for the remote repository URL", "The main branch name", "The first commit"], ans: 1, explain: "`origin` is just a conventional name (alias) for the remote you cloned from. You could rename it. It's stored in .git/config as a [remote] section." },
+  { q: "What happens to blobs when you rename a file in Git?", opts: ["A new blob is created", "The blob is deleted and recreated with new name", "The blob object stays the same (content unchanged = same hash); only the tree changes", "Git cannot track renames"], ans: 2, explain: "Blobs store only content, not filenames. Renaming a file without changing content means the same blob hash is reused — only the parent tree object changes to map the new name to that blob." },
+  { q: "A colleague force-pushed to `main` and your local main now has 3 extra commits. How do you safely sync?", opts: ["git pull --rebase", "git fetch origin && git reset --hard origin/main", "git push --force", "git merge origin/main"], ans: 1, explain: "After a force push, you need to hard reset to origin/main: `git fetch origin` gets the new state, then `git reset --hard origin/main` aligns your local to the new remote state." }
+];
+
+let examState = { answered: {}, score: 0 };
+
+function initExamPrep() {
+  document.getElementById('exam-start').style.display = 'block';
+  document.getElementById('exam-running').style.display = 'none';
+  document.getElementById('exam-results').style.display = 'none';
+}
+
+function startExam() {
+  examState = { answered: {}, score: 0 };
+  state.examStarted = true;
+  state.examTimeLeft = 1800;
+
+  document.getElementById('exam-start').style.display = 'none';
+  document.getElementById('exam-running').style.display = 'block';
+  document.getElementById('exam-results').style.display = 'none';
+
+  renderExam();
+  startExamTimer();
+}
+
+function renderExam() {
+  const container = document.getElementById('exam-container');
+  container.innerHTML = EXAM_QUESTIONS.map((q, qi) => `
+    <div class="quiz-question" id="eq-${qi}">
+      <div class="quiz-q-text"><strong>Q${qi + 1}.</strong> ${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, oi) => `
+          <button class="quiz-option ${examState.answered[qi] !== undefined ? (oi === q.ans ? 'correct' : (oi === examState.answered[qi] ? 'wrong' : '')) : ''}"
+            onclick="answerExam(${qi}, ${oi})"
+            ${examState.answered[qi] !== undefined ? 'disabled' : ''}>
+            <span class="quiz-opt-key">${String.fromCharCode(65 + oi)}</span>${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback ${examState.answered[qi] !== undefined ? 'show ' + (examState.answered[qi] === q.ans ? 'correct' : 'wrong') : ''}">
+        ${examState.answered[qi] !== undefined ? (examState.answered[qi] === q.ans ? '✓ Correct! ' : '✗ Wrong. ') + q.explain : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function answerExam(qi, oi) {
+  if (examState.answered[qi] !== undefined) return;
+  examState.answered[qi] = oi;
+  if (oi === EXAM_QUESTIONS[qi].ans) examState.score++;
+
+  document.getElementById('exam-progress-fill').style.width = (Object.keys(examState.answered).length / EXAM_QUESTIONS.length * 100) + '%';
+
+  const container = document.getElementById('eq-' + qi);
+  const opts = container.querySelectorAll('.quiz-option');
+  const q = EXAM_QUESTIONS[qi];
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    btn.classList.remove('correct', 'wrong');
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === oi) btn.classList.add('wrong');
+  });
+  const fb = container.querySelector('.quiz-feedback');
+  fb.className = `quiz-feedback show ${oi === q.ans ? 'correct' : 'wrong'}`;
+  fb.textContent = (oi === q.ans ? '✓ Correct! ' : '✗ Wrong. ') + q.explain;
+
+  if (Object.keys(examState.answered).length === EXAM_QUESTIONS.length) {
+    finishExam();
+  }
+}
+
+function startExamTimer() {
+  if (state.examInterval) clearInterval(state.examInterval);
+  state.examInterval = setInterval(() => {
+    state.examTimeLeft--;
+    const min = Math.floor(state.examTimeLeft / 60);
+    const sec = state.examTimeLeft % 60;
+    document.getElementById('exam-timer').textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    if (state.examTimeLeft <= 0) finishExam();
+  }, 1000);
+}
+
+function finishExam() {
+  clearInterval(state.examInterval);
+  const score = examState.score;
+  const total = EXAM_QUESTIONS.length;
+  const pct = score / total;
+
+  document.getElementById('exam-running').style.display = 'none';
+  document.getElementById('exam-results').style.display = 'block';
+  document.getElementById('exam-score-num').textContent = `${score}/${total}`;
+
+  let rank, desc;
+  if (pct >= 0.9) { rank = '👑 Git Expert'; desc = 'Outstanding! You have expert-level Git knowledge. FAANG interview ready.'; }
+  else if (pct >= 0.75) { rank = '🔥 Advanced'; desc = 'Excellent! Strong Git skills. Review internals and edge cases to hit Expert level.'; }
+  else if (pct >= 0.5) { rank = '⚡ Intermediate'; desc = 'Good foundation! Review advanced topics like rebase, reset modes, and Git internals.'; }
+  else { rank = '🌱 Beginner'; desc = 'Keep learning! Go through each topic carefully, especially branching and the object model.'; }
+
+  document.getElementById('exam-rank-display').textContent = rank;
+  document.getElementById('exam-rank-desc').textContent = desc;
+
+  if (pct >= 0.8 && !state.earnedBadges.has('git-master')) {
+    state.earnedBadges.add('git-master');
+    setTimeout(() => showToast('🏅 Badge: Git Master!', '🏅'), 1500);
+  }
+
+  addXP(score * 5);
+  state.examStarted = false;
+}
+
+function restartExam() {
+  initExamPrep();
+}
+
+// ============================================================
+// SIMULATOR
+// ============================================================
+let simInitialized = false;
+
+function initSimulator() {
+  if (simInitialized) return;
+  simInitialized = true;
+  drawSimGraph();
+  updateSimState();
+
+  const input = document.getElementById('terminal-input');
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const cmd = input.value.trim();
+      if (cmd) {
+        processCommand(cmd);
+        input.value = '';
+      }
+    }
+  });
+}
+
+const sim = state.sim;
+
+function processCommand(cmd) {
+  appendTermLine(`~/myproject $ ${cmd}`, 'cmd');
+
+  const parts = cmd.trim().split(/\s+/);
+  if (parts[0] !== 'git') {
+    appendTermLine(`bash: ${parts[0]}: command not found. Try git commands.`, 'error');
+    return;
+  }
+
+  const sub = parts[1];
+  const args = parts.slice(2);
+
+  switch(sub) {
+    case 'init': simInit(); break;
+    case 'status': simStatus(); break;
+    case 'add': simAdd(args); break;
+    case 'commit': simCommit(args); break;
+    case 'branch': simBranch(args); break;
+    case 'checkout': simCheckout(args); break;
+    case 'switch': simSwitch(args); break;
+    case 'merge': simMerge(args); break;
+    case 'log': simLog(args); break;
+    case 'stash': simStash(args); break;
+    case 'reset': simReset(args); break;
+    case 'push': appendTermLine('Everything up-to-date (remote simulation).', 'success'); break;
+    case 'pull': appendTermLine('Already up to date (remote simulation).', 'success'); break;
+    case 'fetch': appendTermLine('From origin (simulation). No changes.', 'info'); break;
+    case 'help': simHelp(); break;
+    default: appendTermLine(`git: '${sub}' is not a git command. Try 'git help'.`, 'error');
+  }
+
+  updateSimState();
+  drawSimGraph();
+}
+
+function simInit() {
+  if (sim.initialized) { appendTermLine('Reinitialized existing Git repository in ~/myproject/.git/', 'warn'); return; }
+  sim.initialized = true;
+  sim.branches = { main: -1 };
+  sim.currentBranch = 'main';
+  sim.commits = [];
+  appendTermLine('Initialized empty Git repository in ~/myproject/.git/', 'success');
+}
+
+function simStatus() {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  appendTermLine(`On branch ${sim.currentBranch}`, 'info');
+  if (sim.commits.length === 0) appendTermLine("No commits yet", 'warn');
+  if (sim.staged.length > 0) {
+    appendTermLine("Changes to be committed:", 'success');
+    sim.staged.forEach(f => appendTermLine(`\tnew file: ${f}`, 'success'));
+  }
+  if (sim.workingChanges.length > 0) {
+    appendTermLine("Untracked / modified files:", 'warn');
+    sim.workingChanges.forEach(f => appendTermLine(`\t${f}`, 'warn'));
+  }
+  if (sim.staged.length === 0 && sim.workingChanges.length === 0) appendTermLine("nothing to commit, working tree clean", 'out');
+}
+
+function simAdd(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  const target = args[0];
+  if (target === '.' || target === '-A') {
+    const toAdd = [...sim.workingChanges];
+    toAdd.forEach(f => { if (!sim.staged.includes(f)) sim.staged.push(f); });
+    sim.workingChanges = [];
+    appendTermLine(`Staged: ${toAdd.join(', ')}`, 'success');
+  } else if (target) {
+    if (sim.workingChanges.includes(target)) {
+      sim.staged.push(target);
+      sim.workingChanges = sim.workingChanges.filter(f => f !== target);
+      appendTermLine(`Staged: ${target}`, 'success');
+    } else {
+      appendTermLine(`error: pathspec '${target}' did not match any files`, 'error');
+    }
+  } else {
+    appendTermLine('Usage: git add <file> or git add .', 'warn');
+  }
+}
+
+function simCommit(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  if (sim.staged.length === 0) { appendTermLine('nothing to commit, working tree clean', 'warn'); return; }
+
+  const mIdx = args.indexOf('-m');
+  let msg = 'New commit';
+  if (mIdx !== -1 && args[mIdx + 1]) msg = args.slice(mIdx + 1).join(' ').replace(/^["']|["']$/g, '');
+
+  const hash = Math.random().toString(36).substr(2, 7);
+  const parentIdx = sim.branches[sim.currentBranch];
+  const commit = { hash, msg, branch: sim.currentBranch, parent: parentIdx, files: [...sim.staged], idx: sim.commits.length };
+  sim.commits.push(commit);
+  sim.branches[sim.currentBranch] = sim.commits.length - 1;
+  sim.staged = [];
+
+  appendTermLine(`[${sim.currentBranch} ${hash}] ${msg}`, 'success');
+  appendTermLine(` ${commit.files.length} file(s) changed`, 'out');
+
+  // Add a new working change for continued simulation
+  const newFiles = ['README.md', 'package.json', 'server.js', 'utils.js', 'test.js', 'config.js'];
+  const pick = newFiles[Math.floor(Math.random() * newFiles.length)];
+  if (!sim.workingChanges.includes(pick)) sim.workingChanges.push(pick);
+}
+
+function simBranch(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  if (args[0] === '-d' || args[0] === '-D') {
+    const name = args[1];
+    if (!name) { appendTermLine('error: provide branch name', 'error'); return; }
+    if (name === sim.currentBranch) { appendTermLine(`error: Cannot delete the branch '${name}' which you are currently on.`, 'error'); return; }
+    if (!sim.branches[name]) { appendTermLine(`error: branch '${name}' not found.`, 'error'); return; }
+    delete sim.branches[name];
+    appendTermLine(`Deleted branch ${name}.`, 'success');
+  } else if (args[0]) {
+    const name = args[0];
+    if (sim.branches[name] !== undefined) { appendTermLine(`fatal: A branch named '${name}' already exists.`, 'error'); return; }
+    sim.branches[name] = sim.branches[sim.currentBranch];
+    appendTermLine(`Created branch '${name}'.`, 'success');
+  } else {
+    // List branches
+    Object.keys(sim.branches).forEach(b => {
+      appendTermLine(`${b === sim.currentBranch ? '* ' : '  '}${b}`, b === sim.currentBranch ? 'success' : 'out');
+    });
+  }
+}
+
+function simCheckout(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  if (args[0] === '-b') {
+    const name = args[1];
+    if (!name) { appendTermLine('error: provide branch name', 'error'); return; }
+    sim.branches[name] = sim.branches[sim.currentBranch];
+    sim.currentBranch = name;
+    appendTermLine(`Switched to a new branch '${name}'`, 'success');
+  } else {
+    const name = args[0];
+    if (!name) { appendTermLine('error: provide branch or commit', 'error'); return; }
+    if (sim.branches[name] !== undefined) {
+      sim.currentBranch = name;
+      appendTermLine(`Switched to branch '${name}'`, 'success');
+    } else {
+      appendTermLine(`error: pathspec '${name}' did not match any branch.`, 'error');
+    }
+  }
+}
+
+function simSwitch(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  if (args[0] === '-c') {
+    const name = args[1];
+    if (!name) { appendTermLine('error: provide branch name', 'error'); return; }
+    sim.branches[name] = sim.branches[sim.currentBranch];
+    sim.currentBranch = name;
+    appendTermLine(`Switched to a new branch '${name}'`, 'success');
+  } else {
+    const name = args[0];
+    if (!name) { appendTermLine('error: provide branch name', 'error'); return; }
+    if (sim.branches[name] !== undefined) {
+      sim.currentBranch = name;
+      appendTermLine(`Switched to branch '${name}'`, 'success');
+    } else {
+      appendTermLine(`fatal: invalid reference: '${name}'`, 'error');
+    }
+  }
+}
+
+function simMerge(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  const name = args[0];
+  if (!name) { appendTermLine('error: provide branch to merge', 'error'); return; }
+  if (sim.branches[name] === undefined) { appendTermLine(`merge: ${name} - not something we can merge`, 'error'); return; }
+
+  const srcIdx = sim.branches[name];
+  const dstIdx = sim.branches[sim.currentBranch];
+
+  if (srcIdx === dstIdx) { appendTermLine('Already up to date.', 'out'); return; }
+
+  // Create merge commit
+  const hash = Math.random().toString(36).substr(2, 7);
+  const commit = { hash, msg: `Merge branch '${name}' into ${sim.currentBranch}`, branch: sim.currentBranch, parent: dstIdx, parent2: srcIdx, files: [], idx: sim.commits.length, isMerge: true };
+  sim.commits.push(commit);
+  sim.branches[sim.currentBranch] = sim.commits.length - 1;
+  appendTermLine(`Merge made by the 'ort' strategy.`, 'success');
+  appendTermLine(`[${sim.currentBranch} ${hash}] Merge branch '${name}'`, 'success');
+}
+
+function simLog(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  if (sim.commits.length === 0) { appendTermLine('fatal: your current branch has no commits yet', 'warn'); return; }
+  const oneline = args.includes('--oneline');
+  const branchCommits = getBranchCommits(sim.currentBranch);
+  branchCommits.reverse().forEach(c => {
+    if (oneline) appendTermLine(`${c.hash} ${c.msg}`, 'out');
+    else {
+      appendTermLine(`commit ${c.hash}`, 'hash');
+      appendTermLine(`    ${c.msg}`, 'out');
+    }
+  });
+}
+
+function getBranchCommits(branch) {
+  const commits = [];
+  let idx = sim.branches[branch];
+  while (idx >= 0 && idx !== undefined) {
+    commits.push(sim.commits[idx]);
+    idx = sim.commits[idx].parent;
+  }
+  return commits;
+}
+
+function simStash(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  const sub = args[0] || 'push';
+  if (sub === 'push' || sub === undefined || !args[0]) {
+    if (sim.workingChanges.length === 0 && sim.staged.length === 0) { appendTermLine('No local changes to save', 'warn'); return; }
+    sim.stash.push({ staged: [...sim.staged], working: [...sim.workingChanges] });
+    sim.staged = []; sim.workingChanges = [];
+    appendTermLine(`Saved working directory and index state WIP on ${sim.currentBranch}: stash@{0}`, 'success');
+  } else if (sub === 'pop') {
+    if (sim.stash.length === 0) { appendTermLine('error: No stash entries found.', 'error'); return; }
+    const s = sim.stash.pop();
+    sim.staged = s.staged; sim.workingChanges = s.working;
+    appendTermLine('Restored changes from stash@{0}', 'success');
+  } else if (sub === 'list') {
+    if (sim.stash.length === 0) { appendTermLine('(no stash entries)', 'out'); return; }
+    sim.stash.forEach((s, i) => appendTermLine(`stash@{${i}}: WIP on ${sim.currentBranch}`, 'out'));
+  } else {
+    appendTermLine('Usage: git stash / git stash pop / git stash list', 'warn');
+  }
+}
+
+function simReset(args) {
+  if (!sim.initialized) { appendTermLine('fatal: not a git repository', 'error'); return; }
+  const mode = args.find(a => ['--soft','--mixed','--hard'].includes(a)) || '--mixed';
+  const target = args.find(a => !a.startsWith('--'));
+
+  if (target === 'HEAD~1' || target === 'HEAD^') {
+    const curIdx = sim.branches[sim.currentBranch];
+    if (curIdx < 0 || curIdx === undefined) { appendTermLine('error: no commits to reset to', 'error'); return; }
+    const cur = sim.commits[curIdx];
+    sim.branches[sim.currentBranch] = cur.parent !== undefined ? cur.parent : -1;
+    if (mode === '--soft') { sim.staged = [...cur.files]; appendTermLine(`HEAD is now at previous commit (staged files preserved)`, 'warn'); }
+    else if (mode === '--mixed') { sim.workingChanges = [...cur.files]; appendTermLine(`HEAD is now at previous commit (files unstaged)`, 'warn'); }
+    else { appendTermLine(`HEAD is now at previous commit (changes DISCARDED)`, 'error'); }
+  } else {
+    appendTermLine('Simulation supports: git reset --soft/--mixed/--hard HEAD~1', 'warn');
+  }
+}
+
+function simHelp() {
+  appendTermLine('Supported commands: init, status, add, commit, branch, checkout, switch, merge, log, stash, reset, push, pull, fetch', 'info');
+}
+
+function appendTermLine(text, type = 'out') {
+  const output = document.getElementById('terminal-output');
+  const div = document.createElement('div');
+  div.className = 'term-line';
+  const span = document.createElement('span');
+  span.className = type === 'cmd' ? '' : `term-${type === 'hash' ? 'info' : type}`;
+  span.textContent = text;
+  if (type === 'cmd') { const p = document.createElement('span'); p.className = 'term-prompt'; p.textContent = ''; div.appendChild(p); }
+  div.appendChild(span);
+  output.appendChild(div);
+  output.scrollTop = output.scrollHeight;
+}
+
+function updateSimState() {
+  document.getElementById('sim-branch-display').textContent = sim.currentBranch || '—';
+  const curIdx = sim.branches[sim.currentBranch];
+  const curCommit = curIdx >= 0 && sim.commits[curIdx] ? sim.commits[curIdx] : null;
+  document.getElementById('sim-head-display').textContent = curCommit ? curCommit.hash : '—';
+  document.getElementById('sim-staged-display').textContent = sim.staged.length > 0 ? sim.staged.join(', ') : 'none';
+}
+
+function drawSimGraph() {
+  const canvas = document.getElementById('sim-graph-canvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth;
+  const H = 180;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  if (!sim.initialized || sim.commits.length === 0) {
+    ctx.fillStyle = '#5c6280';
+    ctx.font = '13px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Type "git init" then make some commits to see the graph', W/2, H/2);
+    return;
+  }
+
+  const commits = sim.commits;
+  const nodeR = 18;
+  const nodeSpacing = 80;
+  const startX = 50;
+  const branchColors = ['#4f9eff','#3dd68c','#f72585','#ffd166','#7c5cfc','#ff8c42'];
+  const branchList = Object.keys(sim.branches);
+
+  // Assign y-position per branch
+  const branchY = {};
+  branchList.forEach((b, i) => { branchY[b] = 60 + i * 70; });
+
+  // Position commits
+  const commitPos = {};
+  commits.forEach((c, i) => {
+    const x = startX + i * nodeSpacing;
+    const y = branchY[c.branch] || 60;
+    commitPos[i] = { x, y };
+  });
+
+  // Draw connections
+  commits.forEach((c, i) => {
+    if (c.parent !== undefined && c.parent >= 0) {
+      const from = commitPos[i];
+      const to = commitPos[c.parent];
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.strokeStyle = '#252836';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    if (c.parent2 !== undefined && c.parent2 >= 0) {
+      const from = commitPos[i];
+      const to = commitPos[c.parent2];
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.strokeStyle = '#3dd68c';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5,3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  });
+
+  // Draw nodes
+  commits.forEach((c, i) => {
+    const { x, y } = commitPos[i];
+    const color = branchColors[branchList.indexOf(c.branch) % branchColors.length];
+    const curIdx = sim.branches[sim.currentBranch];
+    const isHead = i === curIdx;
+
+    ctx.beginPath();
+    ctx.arc(x, y, nodeR, 0, Math.PI * 2);
+    ctx.fillStyle = '#161820';
+    ctx.fill();
+    ctx.strokeStyle = isHead ? '#ffd166' : color;
+    ctx.lineWidth = isHead ? 3 : 2;
+    ctx.stroke();
+
+    ctx.fillStyle = isHead ? '#ffd166' : color;
+    ctx.font = 'bold 9px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(c.hash.substr(0,4), x, y);
+
+    // Message
+    ctx.fillStyle = '#5c6280';
+    ctx.font = '8px JetBrains Mono, monospace';
+    const shortMsg = c.msg.length > 12 ? c.msg.substr(0,12) + '..' : c.msg;
+    ctx.fillText(shortMsg, x, y + nodeR + 12);
+  });
+
+  // Draw branch labels
+  branchList.forEach((b, bi) => {
+    const idx = sim.branches[b];
+    if (idx === undefined || idx < 0) return;
+    const { x, y } = commitPos[idx] || { x: startX, y: branchY[b] };
+    const color = branchColors[bi % branchColors.length];
+    const label = b === sim.currentBranch ? b + ' ← HEAD' : b;
+
+    ctx.fillStyle = color;
+    const tw = ctx.measureText(label).width + 10;
+    ctx.fillRect(x - tw/2, y - nodeR - 22, tw, 14);
+    ctx.fillStyle = '#0a0b0f';
+    ctx.font = 'bold 8px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(label, x, y - nodeR - 20);
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  updateXPDisplay();
+  navigate('home');
+});
+
+window.addEventListener('click', (e) => {
+  if (e.target === document.getElementById('badges-modal')) closeBadges();
+});
+</script>
+</body>
+</html>
