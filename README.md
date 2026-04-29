@@ -1,63 +1,127 @@
-# GitVista
-An interactive, gamified, and fully visual Git learning platform built in a single HTML file. It helps beginners understand Git from basics to advanced concepts through simulations, visual graphs, quizzes, and hands-on learning.
-📌 Features
-📚 Complete Git Curriculum
+# 🚀 GitVista
+
+> An interactive, gamified, and fully visual Git learning platform built in a single HTML file.
+
+GitVista helps beginners master Git from absolute basics to advanced concepts through interactive simulations, visual commit graphs, quizzes, and hands-on learning.
+
+---
+
+## 📌 Features
+
+### 📚 Complete Git Curriculum
 
 Covers Git from zero to advanced level:
 
-Git Basics (init, add, commit, status, log)
-Branching & Merging
-Remote Repositories (push, pull, fetch, clone)
-Advanced Git (rebase, cherry-pick, stash, reset, reflog)
-Git Internals (objects, trees, blobs, DAG model)
-💻 Interactive Git Simulator
-Fake terminal to type Git commands
-Real-time simulation of Git behavior
-Visual update of repository state
-Step-by-step explanation of internal operations
-📊 Visual Learning System
-Commit history graph visualization
-Branch creation and merging animation
-Before/after state comparison for every command
-Clear flow of Git operations
-🧪 Quiz System
-MCQs after each topic
-Scenario-based Git problems
-Instant scoring and feedback
-Final exam mode
-🎮 Gamification
-XP points for learning progress
-Level system (Beginner → Intermediate → Expert)
-Achievement badges:
-First Commit
-Branch Explorer
-Merge Master
-Git Internals Pro
-🏁 Final Exam Mode
-20+ mixed questions
-Timed test
-Skill evaluation:
-Beginner / Intermediate / Advanced / Expert Git user
-🧠 Learning Philosophy
+🟢 Git Basics  
+- git init, git add, git commit, git status, git log  
 
-This project is designed to:
+🟡 Branching & Merging  
+- Branch creation & switching  
+- Merge vs fast-forward merge  
+- Conflict handling  
 
-Replace passive reading with interactive learning
-Show how Git actually works internally
-Build intuition through visualization
-Help users prepare for real-world coding interviews (FAANG level)
+🔵 Remote Repositories  
+- git clone, git push, git pull, git fetch  
+- Understanding origin/main  
 
+🟠 Advanced Git  
+- rebase, cherry-pick, stash  
+- reset (soft / mixed / hard)  
+- reflog, HEAD manipulation  
 
-💡 Future Improvements
-Add multiplayer collaboration simulation
-Add real repository syncing mode
-Add AI tutor for Git explanations
-Add coding interview Git challenges
-🏆 Outcome
+🔴 Git Internals  
+- Blobs, Trees, Commits  
+- DAG (Directed Acyclic Graph)  
+- Object storage model  
 
-By using this tool, a learner should be able to:
+---
 
-Understand Git deeply (not just commands)
-Visualize commit history and branching
-Solve Git interview problems confidently
-Work comfortably in real projects
+### 💻 Interactive Git Simulator
+
+- Fake terminal for Git commands  
+- Live simulation of Git behavior  
+- Visual repository state updates  
+- Step-by-step internal execution breakdown  
+- Shows what Git does behind the scenes  
+
+---
+
+### 📊 Visual Learning System
+
+- Commit history graph visualization  
+- Branch creation and merging animations  
+- Before/after state comparison for every command  
+- Clear flow of repository evolution  
+
+---
+
+### 🧪 Quiz System
+
+- MCQs after every topic  
+- Scenario-based Git challenges  
+- Instant feedback with explanations  
+- Score tracking system  
+- Final exam mode  
+
+---
+
+### 🎮 Gamification
+
+- XP points for each lesson  
+- Level system: Beginner → Intermediate → Expert  
+- Achievement badges:
+  - 🥇 First Commit  
+  - 🌿 Branch Explorer  
+  - 🔀 Merge Master  
+  - 🧠 Git Internals Pro  
+
+---
+
+### 🏁 Final Exam Mode
+
+- 20+ mixed difficulty questions  
+- Timed assessment  
+- Real-world Git scenarios  
+- Final grading:
+  - Beginner / Intermediate / Advanced / Expert Git User  
+
+---
+
+## 🧠 Learning Philosophy
+
+GitVista is designed to:
+
+- Replace memorization with visual understanding  
+- Show how Git works internally  
+- Build intuition through interactive learning  
+- Prepare users for real-world development and FAANG interviews  
+
+---
+
+## 🚀 Outcome
+
+After using GitVista, learners will be able to:
+
+- Understand Git deeply (not just commands)  
+- Visualize branching and commit history  
+- Debug Git issues confidently  
+- Perform well in interviews  
+- Work efficiently in real-world projects  
+
+---
+
+## 🔮 Future Improvements
+
+- Multiplayer Git collaboration simulation  
+- Real GitHub repository sync mode  
+- AI-powered Git tutor  
+- Interview challenge mode  
+- Advanced Git puzzles  
+
+---
+
+## 🏆 Vision
+
+GitVista aims to become:
+
+> “The most intuitive way to learn Git visually and interactively.”
